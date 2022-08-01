@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config";
+import { TokenModel } from "./token.model";
 
 export class UserModel extends Model {}
 
@@ -8,7 +9,7 @@ UserModel.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -17,6 +18,7 @@ UserModel.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -28,13 +30,21 @@ UserModel.init(
     },
     phoneNumber: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     role: {
-      type: DataTypes.ENUM("admin", "seller"),
+      type: DataTypes.ENUM,
+      values: ['user', 'seller', 'admin'],
+      defaultValue: "user",
+    },
+    recoveryToken: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     },
   },
   {
     sequelize,
     timestamps: true,
+    modelName: "user",
   }
 );
