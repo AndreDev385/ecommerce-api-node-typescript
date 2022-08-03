@@ -10,8 +10,17 @@ export class CreateUserImpl implements CreateUserUseCase {
   }
 
   async execute(user: CreateUser): Promise<ReadUser> {
-    user.password = await User.hashPassword(user.password)
+    User.validateCreateUserData(user);
+    const emailInUse = await this.userRepository.findByEmail(user.email);
+    if (emailInUse) throw new Error("Email already in use");
+    user.password = await User.hashPassword(user.password);
     const result = await this.userRepository.create(user);
-    return result;
+    return {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      role: result.role,
+      phoneNumber: result.phoneNumber
+    };
   }
 }

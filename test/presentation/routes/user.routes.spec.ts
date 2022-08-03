@@ -10,7 +10,6 @@ import { FindOneUserUseCase } from "../../../src/application/usecases/user/findo
 import { DeleteUserUseCase } from "../../../src/application/usecases/user/delete-user-usecase";
 import { UpdateUserRoleUseCase } from "../../../src/application/usecases/user/update-user-role-usecase";
 
-import { UserRepository } from "../../../src/domain/repository/interface/user-repository";
 
 class MockListUserUseCase implements ListUserUseCase {
   execute(): Promise<ReadUser[]> {
@@ -91,7 +90,7 @@ describe("Contact Router", () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual({
-        message: "success",
+        message: "Success",
         data: ExpectedData,
       });
       expect(mockListUser.execute).toBeCalledTimes(1);

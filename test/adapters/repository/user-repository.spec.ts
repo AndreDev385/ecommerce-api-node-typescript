@@ -1,83 +1,105 @@
-import { UserDataSource } from "../../../src/adapters/data-source/user-data-source";
-import { CreateUser, ReadUser, User } from "../../../src/domain/entity/user";
-import { UserRepository } from "../../../src/domain/repository/interface/user-repository";
-import { UserRepositoryImpl } from "../../../src/adapters/repository/user-repository";
-
-class MockUserDataSource implements UserDataSource {
-  create(user: CreateUser): Promise<ReadUser> {
-    throw new Error("Method not implemented");
-  }
-
-  findAll(): Promise<ReadUser[]> {
-    throw new Error("Method not implemented");
-  }
-  findOne(id: number): Promise<ReadUser> {
-    throw new Error("Method not implemented");
-  }
-  updateRole(id: number, role: string): Promise<ReadUser> {
-    throw new Error("Method not implemented");
-  }
-  deleteOne(id: number): Promise<void> {
-    throw new Error("Method not implemented");
-  }
-}
+import { SequelizeWrapper } from "../../../src/adapters/repository/sequilize/db-sequelize-wrapper";
+import { SequilizeUserRepository } from "../../../src/adapters/repository/sequilize/user-repository";
 
 describe("Test User Repository", () => {
-  let mockUserDataSource: UserDataSource;
-  let userRepository: UserRepository;
+  let mockDatabase: SequelizeWrapper;
+
+  beforeAll(async () => {
+    mockDatabase = {
+      findAll: jest.fn(),
+      create: jest.fn(),
+      findOne: jest.fn(),
+      update: jest.fn(),
+    };
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUserDataSource = new MockUserDataSource();
-    userRepository = new UserRepositoryImpl(mockUserDataSource);
   });
 
-  describe("get all users", () => {
-    test("should return data", async () => {
-      const ExpectedData = [
+  test("should return data", async () => {
+    const db = new SequilizeUserRepository(mockDatabase);
+    jest.spyOn(mockDatabase, "findAll").mockImplementation(() =>
+      Promise.resolve([
         {
           id: 1,
-          name: "Andre",
+          name: "andre",
           email: "andre@izarra.com",
+          password: "123456",
           role: "admin",
-          phoneNumber: "04244567891",
+          phoneNumber: "",
         },
-      ];
-
-      jest
-        .spyOn(mockUserDataSource, "findAll")
-        .mockImplementation(() => Promise.resolve(ExpectedData));
-      const result = await userRepository.findAll();
-      expect(result).toStrictEqual(ExpectedData);
-    });
-  });
-
-  describe("create new user", () => {
-    test("should return true", async () => {
-      const InputData = {
-        name: "Andre",
+      ])
+    );
+    const result = await db.findAll();
+    expect(result).toStrictEqual([
+      {
+        id: 1,
+        name: "andre",
         email: "andre@izarra.com",
         password: "123456",
         role: "admin",
-        phoneNumber: "04244567891",
-      };
-      jest.spyOn(mockUserDataSource, "create").mockImplementation(() =>
-        Promise.resolve({
-          id: 1,
-          name: "Andre",
-          email: "andre@izarra.com",
-          role: "admin",
-          phoneNumber: "04244567891",
-        })
-      );
-      const result = await userRepository.create(InputData);
-      expect(result).toStrictEqual({
+        phoneNumber: "",
+      },
+    ]);
+  });
+
+  test("create", async () => {
+    const ds = new SequilizeUserRepository(mockDatabase);
+    jest.spyOn(mockDatabase, "create").mockImplementation(() =>
+      Promise.resolve({
         id: 1,
         name: "Andre",
+        password: "123456",
+        email: "andre@izarra.com",
+        role: "seller",
+        phoneNumber: "",
+      })
+    );
+    const result = await ds.create({
+      name: "Andre",
+      email: "andre@izarra.com",
+      password: "123456",
+      role: "admin",
+    });
+
+    expect(mockDatabase.create).toHaveBeenCalledWith({
+      name: "Andre",
+      password: "123456",
+      email: "andre@izarra.com",
+      role: "admin",
+    });
+    expect(result).toStrictEqual({
+      id: 1,
+      name: "Andre",
+      password: "123456",
+      email: "andre@izarra.com",
+      role: "seller",
+      phoneNumber: "",
+    });
+  });
+
+  test("update", async () => {
+    const db = new SequilizeUserRepository(mockDatabase);
+    jest.spyOn(mockDatabase, "update").mockImplementation(() =>
+      Promise.resolve({
+        id: 1,
+        name: "Andre",
+        password: "123456",
+        email: "andre@izarra.com",
+        role: "seller",
+        phoneNumber: "",
+      })
+    );
+    const result = db.updateRole(1, "admin")
+    expect(mockDatabase.update).toHaveBeenCalledTimes(1)
+    expect(result).toStrictEqual({
+        id: 1,
+        name: "Andre",
+        password: "123456",
         email: "andre@izarra.com",
         role: "admin",
-        phoneNumber: "04244567891",
-      });
-    });
+        phoneNumber: "",
+      })
   });
 });

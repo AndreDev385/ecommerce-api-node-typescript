@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { CreateUserUseCase } from "../../application/usecases/user/create-user-usecase";
 import { DeleteUserUseCase } from "../../application/usecases/user/delete-user-usecase";
 import { FindOneUserUseCase } from "../../application/usecases/user/findone-user-usecase";
@@ -14,60 +14,67 @@ export default function userRouter(
 ) {
   const router = express.Router();
 
-  router.get("/", async (req: Request, res: Response) => {
+  router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const users = await listUsers.execute();
-      res.status(200).json({ message: "success", data: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ message: "Error fetching data" });
+      res.status(200).json({ message: "Success", data: users });
+    } catch (err: any) {
+      next(err);
     }
   });
 
-  router.post("/", async (req: Request, res: Response) => {
+  router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await createUser.execute(req.body);
       res.statusCode = 201;
-      res.json({ message: "user has been created", data: user });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ message: "Error saving data" });
+      res.json({ message: "User has been created", data: user });
+    } catch (err: any) {
+      next(err);
     }
   });
 
-  router.get("/:id", async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const user = await findOne.execute(Number(id));
-      res.status(200).json({
-        message: "Succes",
-        data: user,
-      });
-    } catch (err) {
-      res.status(500).send({ message: "Error" });
+  router.get(
+    "/:id",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        const user = await findOne.execute(Number(id));
+        res.status(200).json({
+          message: "Success",
+          data: user,
+        });
+      } catch (err: any) {
+        next(err);
+      }
     }
-  });
+  );
 
-  router.patch("/:id/role", async (req: Request, res: Response) => {
-    try {
-      const { body } = req;
-      const { id } = req.params;
-      const user = await updateUserRole.execute(Number(id), body.role);
-      res.status(200).json({ message: "User role updated", data: user });
-    } catch (err) {
-      res.status(500).send({ message: "Error" });
+  router.patch(
+    "/:id/role",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { body } = req;
+        const { id } = req.params;
+        const user = await updateUserRole.execute(Number(id), body.role);
+        res.status(200).json({ message: "User role updated", data: user });
+      } catch (err: any) {
+        next(err);
+      }
     }
-  });
+  );
 
-  router.delete("/:id", async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      await deleteOne.execute(Number(id));
-      res.status(200).json({ message: "User deleted" });
-    } catch (err) {
-      res.status(500).send({ message: "Error" });
+  router.delete(
+    "/:id",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        await deleteOne.execute(Number(id));
+        res.status(200).json({ message: "User deleted" });
+      } catch (err: any) {
+        next(err);
+      }
     }
-  });
+  );
 
   return router;
 }

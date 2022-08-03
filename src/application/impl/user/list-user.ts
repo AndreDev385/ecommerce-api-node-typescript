@@ -10,6 +10,13 @@ export class ListUserImpl implements ListUserUseCase {
 
   async execute(): Promise<ReadUser[]> {
     const result = await this.userRepository.findAll();
-    return result;
+    if (!result) return []
+    return result.map((r) => ({
+      id: r.id,
+      name: r.name,
+      email: r.email,
+      role: r.role,
+      phoneNumber: r.phoneNumber,
+    }));
   }
 }

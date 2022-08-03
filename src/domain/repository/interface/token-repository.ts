@@ -1,17 +1,8 @@
-import { Token } from "../../entity/token";
-import { ReadUser } from "../../entity/user";
+import { CreateToken, Token } from "../../entity/token";
 
 export interface TokenRepository {
-  isExistUser(email: string): ReadUser;
-  isValidPassword(password: string, userPassword: string): void;
-  isValidRefreshToken(token: string): void;
-  loginUser(object: { email: string; password: string }): {
-    token: string;
-    refreshToken: string;
-  };
-  refreshToken(token: string): string;
-  generateAndSignAccessToken(user: ReadUser): string;
-  generateAndSignRefreshToken(user: ReadUser): string;
-  generateAndSignRecoveryToken(user: ReadUser): string;
-  changePassword(token: string, password: string): { message: string };
+  create(token: CreateToken): Promise<Token>
+  findByUserId(userId: number): Promise<Token>
+  findByToken(token: string): Promise<Token>
+  updateToken(userId: number, token: string): Promise<Token>
 }
