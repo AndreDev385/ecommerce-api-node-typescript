@@ -21,14 +21,14 @@ export const BrandModel = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: "",
     },
-    image: {
+    /*image: {
       type: DataTypes.INTEGER,
       references: {
         model: AssetModel,
         key: "id",
       },
       defaultValue: null,
-    },
+    },*/
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -47,6 +47,16 @@ BrandModel.hasMany(ProductModel, {
 });
 
 ProductModel.belongsTo(BrandModel, {
+  foreignKey: "brandId",
+  targetKey: "id",
+});
+
+BrandModel.hasOne(AssetModel, {
+  foreignKey: "brandId",
+  sourceKey: "id",
+});
+
+AssetModel.belongsTo(BrandModel, {
   foreignKey: "brandId",
   targetKey: "id",
 });

@@ -5,10 +5,11 @@ import authRouter from "./auth.routes";
 import brandRouter from "./brand.routes";
 import categoryRouter from "./category.routes";
 import productRouter from "./product.routes";
-import variationRouter from "./variation.routes"
+import variationRouter from "./variation.routes";
 
 import { SequilizeUserRepository } from "../../adapters/repository/sequilize/user-repository";
 import {
+  categoryDb,
   tokenDb,
   userDb,
 } from "../../adapters/repository/sequilize/db-sequelize-wrapper";
@@ -23,6 +24,12 @@ import { GenerateAndSignAccessTokenImpl } from "../../application/impl/auth/gene
 import { GenerateAndSignRefreshTokenImpl } from "../../application/impl/auth/generate-refresh-token";
 import { RefreshTokenImpl } from "../../application/impl/auth/refresh-token";
 import { IsValidRefreshTokenImpl } from "../../application/impl/auth/isvalid-refresh-token";
+import { ListCategoryImpl } from "../../application/impl/category/list-category-impl";
+import { SequelizeCategoryRepository } from "../../adapters/repository/sequilize/category-repository";
+import { CreateCategoryImpl } from "../../application/impl/category/create-category-impl";
+import { FindOneCategoryImpl } from "../../application/impl/category/findone-category-impl";
+import { UpdateCategoryImpl } from "../../application/impl/category/update-category-impl";
+import { DeleteCategoryImpl } from "../../application/impl/category/delete-category-impl";
 
 export const router = express.Router();
 
@@ -54,7 +61,17 @@ router.use(
   )
 );
 
+router.use(
+  "/category",
+  categoryRouter(
+    new ListCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
+    new CreateCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
+    new FindOneCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
+    new UpdateCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
+    new DeleteCategoryImpl(new SequelizeCategoryRepository(categoryDb))
+  )
+);
+
 router.use("/brand", brandRouter);
-router.use("/category", categoryRouter);
 router.use("/product", productRouter);
-router.use("/variation", variationRouter)
+router.use("/variation", variationRouter);

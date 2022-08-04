@@ -12,12 +12,6 @@ export class FindOneUserImpl implements FindOneUserUseCase {
   async execute(id: number): Promise<ReadUser> {
     const result = await this.userRepository.findOne(id);
     if (!result) throw new NotFoundError("User");
-    return {
-      id: result.id,
-      name: result.name,
-      email: result.email,
-      role: result.role,
-      phoneNumber: result.phoneNumber,
-    };
+    return result
   }
 }

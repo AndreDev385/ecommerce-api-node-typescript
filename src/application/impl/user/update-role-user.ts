@@ -11,14 +11,9 @@ export class UpdateUserRoleImpl implements UpdateUserRoleUseCase {
 
   async execute(id: number, role: string): Promise<ReadUser> {
     User.validateUserRole(role);
+    const user = await this.userRepository.findOne(id)
+    if (!user) throw new NotFoundError("User");
     const result = await this.userRepository.updateRole(id, role);
-    if (!result) throw new NotFoundError("User");
-    return {
-      id: result.id,
-      name: result.name,
-      email: result.email,
-      role: result.role,
-      phoneNumber: result.phoneNumber,
-    };
+    return result
   }
 }

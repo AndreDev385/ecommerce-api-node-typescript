@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config";
+import { AssetModel } from "./asset.model";
 import { TokenModel } from "./token.model";
 
 export class UserModel extends Model {}
@@ -48,3 +49,7 @@ UserModel.init(
     modelName: "user",
   }
 );
+
+UserModel.hasMany(AssetModel, {foreignKey: "owner", sourceKey: 'id'})
+
+AssetModel.belongsTo(UserModel, {foreignKey: 'owner', targetKey: 'id'})

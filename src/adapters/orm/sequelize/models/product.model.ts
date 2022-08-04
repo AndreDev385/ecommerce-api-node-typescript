@@ -3,6 +3,7 @@ import { DataTypes } from "sequelize";
 import { VariationModel } from "./variation.model";
 import { BrandModel } from "./brand.model";
 import { CategoryModel } from "./category.model";
+import { AssetModel } from "./asset.model";
 
 export const ProductModel = sequelize.define(
   "product",
@@ -56,6 +57,16 @@ ProductModel.hasMany(VariationModel, {
 });
 
 VariationModel.belongsTo(ProductModel, {
+  foreignKey: "productId",
+  targetKey: "id",
+});
+
+ProductModel.hasOne(AssetModel, {
+  foreignKey: "productId",
+  sourceKey: "id",
+});
+
+AssetModel.belongsTo(ProductModel, {
   foreignKey: "productId",
   targetKey: "id",
 });
