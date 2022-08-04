@@ -11,13 +11,13 @@ AssetModel.init(
       primaryKey: true,
       autoIncrement: false,
     },
-    owner: {
+    /*owner: {
       type: DataTypes.INTEGER,
       references: {
         model: UserModel,
         key: "id",
       },
-    },
+    },*/
     originalUrl: {
       type: DataTypes.STRING,
       allowNull: false,

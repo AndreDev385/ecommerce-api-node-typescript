@@ -1,7 +1,5 @@
-import {
-  CreateUser,
-  User,
-} from "../../../domain/entity/user";
+import { CreateUser, User } from "../../../domain/entity/user";
+import { NotFoundError } from "../../../domain/exceptions/exceptions";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { SequelizeWrapper } from "./db-sequelize-wrapper";
 
@@ -13,31 +11,33 @@ export class SequilizeUserRepository implements UserRepository {
 
   async create(user: CreateUser): Promise<User> {
     const result = await this.database.create(user);
-    return result
+    return result;
   }
 
   async findAll(): Promise<User[]> {
     const result = await this.database.findAll({ where: { isActive: true } });
-    return result
+    return result;
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findOne(id: number): Promise<User> {
     const result = await this.database.findOne({
       where: { id, isActive: true },
     });
-    return result
+    return result;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User> {
     const result = await this.database.findOne({
       where: { email, isActive: true },
     });
-    return result
+    return result;
   }
 
-  async updateRole(id: number, role: string): Promise<User | null> {
-    await this.database.update({ role }, { where: { id, isActive: true } });
-    const result = await this.findOne(id);
+  async updateRole(id: number, role: string): Promise<User> {
+    const result = await this.database.update(
+      { role },
+      { where: { isActive: true, id } }
+    );
     return result;
   }
 

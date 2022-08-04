@@ -1,5 +1,5 @@
-import { Category } from "../../../domain/entity/category";
+import { Category, CreateCategory } from "../../../domain/entity/category";
 
 export interface CreateCategoryUseCase {
-  execute(category: Category): Promise<Category>;
+  execute(category: CreateCategory): Promise<Category>;
 }

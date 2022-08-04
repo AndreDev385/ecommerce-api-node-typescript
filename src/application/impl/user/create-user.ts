@@ -15,12 +15,6 @@ export class CreateUserImpl implements CreateUserUseCase {
     if (emailInUse) throw new Error("Email already in use");
     user.password = await User.hashPassword(user.password);
     const result = await this.userRepository.create(user);
-    return {
-      id: result.id,
-      name: result.name,
-      email: result.email,
-      role: result.role,
-      phoneNumber: result.phoneNumber
-    };
+    return result
   }
 }

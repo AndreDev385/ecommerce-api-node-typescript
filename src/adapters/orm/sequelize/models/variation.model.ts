@@ -50,3 +50,13 @@ export const VariationModel = sequelize.define(
     timestamps: true,
   }
 );
+
+VariationModel.hasMany(AssetModel, {
+  foreignKey: "variationId",
+  sourceKey:  "id"
+})
+
+AssetModel.belongsTo(VariationModel, {
+  foreignKey: "variarionId",
+  targetKey: "id"
+})

@@ -19,15 +19,16 @@ export const CategoryModel = sequelize.define(
     },
     description: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
-    image: {
+    /*image: {
       type: DataTypes.INTEGER,
       references: {
         model: AssetModel,
         key: "id",
       },
       defaultValue: null,
-    },
+    },*/
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -57,6 +58,16 @@ CategoryModel.hasMany(ProductModel, {
 });
 
 ProductModel.belongsTo(CategoryModel, {
+  foreignKey: "categoryId",
+  targetKey: "id",
+});
+
+CategoryModel.hasOne(AssetModel, {
+  foreignKey: "categoryId",
+  sourceKey: "id",
+});
+
+AssetModel.belongsTo(CategoryModel, {
   foreignKey: "categoryId",
   targetKey: "id",
 });
