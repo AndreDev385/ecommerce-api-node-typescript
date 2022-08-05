@@ -1,3 +1,4 @@
+import { createProductSchema, UpdateProductSchema } from "../schemas/product.schema";
 import { Asset } from "./asset";
 import { Brand } from "./brand";
 import { Category } from "./category";
@@ -6,40 +7,48 @@ import { Variation } from "./variation";
 export class Product {
   id: number;
   name: string;
-  brand: Brand;
-  coverImage: Asset | null;
-  category: Category;
+  brandId: number;
+  categoryId: number;
   description: string;
-  variations: Variation[];
   tags: string[];
 
   constructor(
     id: number,
     name: string,
-    brand: Brand,
-    coverImage: Asset | null = null,
-    category: Category,
+    brand: number,
+    category: number,
     description: string,
-    variations: Variation[] = [],
     tags: string[] = []
   ) {
     this.id = id;
     this.name = name;
-    this.brand = brand;
-    this.coverImage = coverImage;
-    this.category = category;
+    this.brandId = brand;
+    this.categoryId = category;
     this.description = description;
-    this.variations = variations;
     this.tags = tags;
+  }
+
+  static validateCreateProduct(data: CreateProduct) {
+    const { error } = createProductSchema.validate(data, { abortEarly: false });
+    if (error) throw error;
+  }
+  static validateUpdateProduct(data: UpdateProduct) {
+    const { error } = UpdateProductSchema.validate(data, { abortEarly: false });
+    if (error) throw error;
   }
 }
 
 export interface CreateProduct {
   name: string;
-  brand: Brand;
-  coverImage?: Asset;
-  category: Category;
+  brandId: number;
+  categoryId: number;
   description?: string;
-  variations?: Variation[];
+  tags?: string[];
+}
+
+export interface UpdateProduct {
+  name?: string;
+  brand?: Brand;
+  description?: string;
   tags?: string[];
 }
