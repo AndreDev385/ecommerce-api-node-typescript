@@ -13,7 +13,8 @@ export class UpdateUserRoleImpl implements UpdateUserRoleUseCase {
     User.validateUserRole(role);
     const user = await this.userRepository.findOne(id)
     if (!user) throw new NotFoundError("User");
-    const result = await this.userRepository.updateRole(id, role);
+    await this.userRepository.updateRole(id, role);
+    const result = await this.userRepository.findOne(id)
     return result
   }
 }

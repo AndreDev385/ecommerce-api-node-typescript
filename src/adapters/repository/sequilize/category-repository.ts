@@ -47,7 +47,6 @@ export class SequelizeCategoryRepository implements CategoryRepository {
       data,
       { where: { isActive: true, id } }
     );
-    console.log(result)
     return result;
   }
 

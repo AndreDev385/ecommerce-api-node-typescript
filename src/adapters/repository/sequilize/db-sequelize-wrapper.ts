@@ -1,4 +1,5 @@
 import { UpdateOptions } from "sequelize/types";
+import { BrandModel } from "../../orm/sequelize/models/brand.model";
 import { CategoryModel } from "../../orm/sequelize/models/category.model";
 import { TokenModel } from "../../orm/sequelize/models/token.model";
 import { UserModel } from "../../orm/sequelize/models/user.model";
@@ -29,4 +30,11 @@ export const categoryDb: SequelizeWrapper = {
   create: (doc) => CategoryModel.create(doc),
   findOne: (query) => CategoryModel.findOne(query),
   update: (values, where) => CategoryModel.update(values, where),
+};
+
+export const brandDb: SequelizeWrapper = {
+  findAll: (query) => BrandModel.findAll(query),
+  create: (doc) => BrandModel.create(doc),
+  findOne: (query) => BrandModel.findOne(query),
+  update: (values, where) => BrandModel.update(values, where),
 };
