@@ -7,10 +7,12 @@ import categoryRouter from "./category.routes";
 import productRouter from "./product.routes";
 import variationRouter from "./variation.routes";
 
+
 import { SequilizeUserRepository } from "../../adapters/repository/sequilize/user-repository";
 import {
   brandDb,
   categoryDb,
+  productDb,
   tokenDb,
   userDb,
 } from "../../adapters/repository/sequilize/db-sequelize-wrapper";
@@ -37,6 +39,12 @@ import { FindOneBrandImpl } from "../../application/impl/brand/findone-brand-imp
 import { UpdateBrandImpl } from "../../application/impl/brand/update-brand-impl";
 import { DeleteBrandImpl } from "../../application/impl/brand/delete-brand-impl";
 import { ListBrandImpl } from "../../application/impl/brand/list-brand-impl";
+import { ListProductImpl } from "../../application/impl/product/list-product-impl";
+import { SequelizeProductRepository } from "../../adapters/repository/sequilize/product-repository";
+import { CreateProductImpl } from "../../application/impl/product/create-product-impl";
+import { FindOneProductImpl } from "../../application/impl/product/findone-product-impl";
+import { UpdateProductImpl } from "../../application/impl/product/update-product-impl";
+import { DeleteProductImpl } from "../../application/impl/product/delete-product-impl";
 
 export const router = express.Router();
 
@@ -90,5 +98,15 @@ router.use(
   )
 );
 
-router.use("/product", productRouter);
+router.use(
+  "/product",
+  productRouter(
+    new ListProductImpl(new SequelizeProductRepository(productDb)),
+    new CreateProductImpl(new SequelizeProductRepository(productDb)),
+    new FindOneProductImpl(new SequelizeProductRepository(productDb)),
+    new UpdateProductImpl(new SequelizeProductRepository(productDb)),
+    new DeleteProductImpl(new SequelizeProductRepository(productDb))
+  )
+);
+
 router.use("/variation", variationRouter);
