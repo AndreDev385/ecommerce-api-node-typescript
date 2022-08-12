@@ -1,43 +1,55 @@
+import { createVariationSchema } from "../schemas/variation.schema";
 import { Asset } from "./asset";
 
-type Atribute = {
+export type Attribute = {
   name: string;
   value: string;
 };
 
 export class Variation {
-  id: number
+  id: number;
   productId: number;
-  images?: Asset[];
-  attributes: Array<Atribute>;
+  images?: number[];
+  attributes: Array<Attribute>;
   normalPrice: number;
   offerPrice: number;
   stock: number;
+  isAvaible?: boolean;
+  isActive?: boolean
 
-  constructor(
-    id: number,
-    productId: number,
-    images: Asset[] = [],
-    attributes: Atribute[] = [],
-    normalPrice: number,
-    offerPrice: number,
-    stock: number
-  ) {
-    this.id = id
-    this.productId = productId
-    this.images = images
-    this.attributes = attributes
-    this.normalPrice = normalPrice
-    this.offerPrice = offerPrice
-    this.stock = stock
+  static validateCreateVariation(data: CreateVariation) {
+    const { error } = createVariationSchema.validate(data, {
+      abortEarly: false,
+    });
+    if (error) throw error;
+  }
+
+  static validateUpdateVariation(data: UpdateVariation) {
+    const { error } = createVariationSchema.validate(data, {
+      abortEarly: false,
+    });
+    if (error) throw error;
   }
 }
 
 export interface CreateVariation {
-    productId: number
-    images?: Asset[]
-    attributes?: Atribute[]
-    normalPrice: number,
-    offerPrice?: number,
-    stock?: number
+  productId: number;
+  images?: number[];
+  attributes?: Attribute[];
+  normalPrice: number;
+  offerPrice?: number;
+  stock?: number;
+  isAvaible?: boolean;
+  isActive?: boolean
+}
+
+export interface UpdateVariation {
+  productId?: number;
+  images?: number[];
+  attributes?: Attribute[];
+  normalPrice: number;
+  offerPrice?: number;
+  stock?: number;
+  isAvaible?: boolean;
+  isActive?: boolean
 }

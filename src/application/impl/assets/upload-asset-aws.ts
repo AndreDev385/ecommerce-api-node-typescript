@@ -3,7 +3,7 @@ import { AssetRepository } from "../../../domain/repository/interface/asset-repo
 import { config } from "../../../presentation/config";
 import { UploadAssetUseCase } from "../../usecases/assets/upload-asset-usecase";
 
-export class UploadAssetImpl implements UploadAssetUseCase {
+export class UploadAssetAWS implements UploadAssetUseCase {
   assetRepository: AssetRepository;
 
   constructor(assetRepository: AssetRepository) {

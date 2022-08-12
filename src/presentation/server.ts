@@ -4,6 +4,7 @@ import { errorHandler } from './middlewares/error-handler'
 
 export const server: Express = express();
 server.use(express.json());
+server.use(express.raw({ type: 'image/*', limit: '2mb' }));
 
 server.use("/api/v1", router)
 

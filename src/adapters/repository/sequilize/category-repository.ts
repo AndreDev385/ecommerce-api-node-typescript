@@ -4,6 +4,7 @@ import {
   UpdateCategory,
 } from "../../../domain/entity/category";
 import { CategoryRepository } from "../../../domain/repository/interface/category-repository";
+import { AssetModel } from "../../orm/sequelize/models/asset.model";
 import { ProductModel } from "../../orm/sequelize/models/product.model";
 import { SequelizeWrapper } from "./db-sequelize-wrapper";
 
@@ -28,7 +29,7 @@ export class SequelizeCategoryRepository implements CategoryRepository {
 
   async findName(name: string): Promise<Category> {
     const result = await this.database.findOne({
-      include: ProductModel,
+      include: [ProductModel, AssetModel],
       where: { isActive: true, name },
     });
     return result;
@@ -36,7 +37,7 @@ export class SequelizeCategoryRepository implements CategoryRepository {
 
   async findById(id: number): Promise<Category> {
     const result = await this.database.findOne({
-      include: ProductModel,
+      include: [ProductModel, AssetModel],
       where: { isActive: true, id },
     });
     return result;

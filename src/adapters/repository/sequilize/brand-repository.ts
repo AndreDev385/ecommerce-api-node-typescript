@@ -1,5 +1,7 @@
 import { Brand, CreateBrand, UpdateBrand } from "../../../domain/entity/brand";
 import { BrandRepository } from "../../../domain/repository/interface/brand-repository";
+import { AssetModel } from "../../orm/sequelize/models/asset.model";
+import { ProductModel } from "../../orm/sequelize/models/product.model";
 import { SequelizeWrapper } from "./db-sequelize-wrapper";
 
 export class SequelizeBrandRepository implements BrandRepository {
@@ -9,7 +11,10 @@ export class SequelizeBrandRepository implements BrandRepository {
   }
 
   async findAll(): Promise<Brand[]> {
-    const result = await this.database.findAll({ where: { isActive: true } });
+    const result = await this.database.findAll({
+      include: [ProductModel, AssetModel],
+      where: { isActive: true },
+    });
     return result;
   }
 
@@ -20,6 +25,7 @@ export class SequelizeBrandRepository implements BrandRepository {
 
   async findByName(name: string): Promise<Brand> {
     const result = await this.database.findOne({
+      include: [ProductModel, AssetModel],
       where: { name, isActive: true },
     });
     return result;
@@ -27,6 +33,7 @@ export class SequelizeBrandRepository implements BrandRepository {
 
   async findById(id: number): Promise<Brand> {
     const result = await this.database.findOne({
+      include: [ProductModel, AssetModel],
       where: { id, isActive: true },
     });
     return result;

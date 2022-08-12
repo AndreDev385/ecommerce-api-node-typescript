@@ -16,4 +16,8 @@ export const config = {
   S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
   S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
   S3_BUCKET_REGION: process.env.S3_BUCKET_REGION,
+  CLOUDINARY_URL: process.env.CLOUDINARY_URL,
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.API_KEY,
+  CLOUDINARY_SECRET_KEY: process.env.SECRET_KEY,
 };

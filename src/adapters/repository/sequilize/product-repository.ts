@@ -4,6 +4,8 @@ import {
   UpdateProduct,
 } from "../../../domain/entity/product";
 import { ProductRepository } from "../../../domain/repository/interface/product-repository";
+import { AssetModel } from "../../orm/sequelize/models/asset.model";
+import { VariationModel } from "../../orm/sequelize/models/variation.model";
 import { SequelizeWrapper } from "./db-sequelize-wrapper";
 
 export class SequelizeProductRepository implements ProductRepository {
@@ -17,11 +19,17 @@ export class SequelizeProductRepository implements ProductRepository {
   }
 
   async findAll(): Promise<Product[]> {
-    return await this.database.findAll({ where: { isActive: true } });
+    return await this.database.findAll({
+      include: [AssetModel, VariationModel],
+      where: { isActive: true },
+    });
   }
 
   async findOne(id: number): Promise<Product> {
-    return await this.database.findOne({ where: { id, isActive: true } });
+    return await this.database.findOne({
+      include: [AssetModel, VariationModel],
+      where: { id, isActive: true },
+    });
   }
 
   async update(id: number, data: UpdateProduct): Promise<Product> {

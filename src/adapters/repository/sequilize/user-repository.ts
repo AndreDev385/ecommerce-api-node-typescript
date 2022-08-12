@@ -15,7 +15,9 @@ export class SequilizeUserRepository implements UserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    const result = await this.database.findAll({ where: { isActive: true } });
+    const result = await this.database.findAll({
+      where: { isActive: true },
+    });
     return result;
   }
 

@@ -6,15 +6,19 @@ import brandRouter from "./brand.routes";
 import categoryRouter from "./category.routes";
 import productRouter from "./product.routes";
 import variationRouter from "./variation.routes";
-
+import assetRouter from "./asset.routes";
+import attributeRouter from "./attribute.routes";
 
 import { SequilizeUserRepository } from "../../adapters/repository/sequilize/user-repository";
 import {
+  assetDb,
+  attributeDb,
   brandDb,
   categoryDb,
   productDb,
   tokenDb,
   userDb,
+  variationDb,
 } from "../../adapters/repository/sequilize/db-sequelize-wrapper";
 import { ListUserImpl } from "../../application/impl/user/list-user";
 import { CreateUserImpl } from "../../application/impl/user/create-user";
@@ -45,6 +49,17 @@ import { CreateProductImpl } from "../../application/impl/product/create-product
 import { FindOneProductImpl } from "../../application/impl/product/findone-product-impl";
 import { UpdateProductImpl } from "../../application/impl/product/update-product-impl";
 import { DeleteProductImpl } from "../../application/impl/product/delete-product-impl";
+import { ListVariationImpl } from "../../application/impl/variation/list-variation-impl";
+import { SequelizeVariationRepository } from "../../adapters/repository/sequilize/variation-repository";
+import { CreateVariationImpl } from "../../application/impl/variation/create-variation-impl";
+import { ListAssetsImpl } from "../../application/impl/assets/list-assets";
+import { SequelizeAssetRepository } from "../../adapters/repository/sequilize/asset-repository";
+import { UploadAssetCloudinary } from "../../application/impl/assets/upload-asset-cloudinary";
+import { CloudinaryUploader } from "../upload/cloudinary";
+import { UpdateAssetImpl } from "../../application/impl/assets/update-asset-impl";
+import { ListAttributeImpl } from "../../application/impl/variation/list-attribute-impl";
+import { SequelizeAttributeRepository } from "../../adapters/repository/sequilize/attribute-repository";
+import { CreateAttributeImpl } from "../../application/impl/variation/create-attribute-impl";
 
 export const router = express.Router();
 
@@ -109,4 +124,30 @@ router.use(
   )
 );
 
-router.use("/variation", variationRouter);
+router.use(
+  "/variation",
+  variationRouter(
+    new ListVariationImpl(new SequelizeVariationRepository(variationDb)),
+    new CreateVariationImpl(new SequelizeVariationRepository(variationDb))
+  )
+);
+
+router.use(
+  "/assets",
+  assetRouter(
+    new ListAssetsImpl(new SequelizeAssetRepository(assetDb)),
+    new UploadAssetCloudinary(
+      new SequelizeAssetRepository(assetDb),
+      new CloudinaryUploader()
+    ),
+    new UpdateAssetImpl(new SequelizeAssetRepository(assetDb))
+  )
+);
+
+router.use(
+  "/attributes",
+  attributeRouter(
+    new ListAttributeImpl(new SequelizeAttributeRepository(attributeDb)),
+    new CreateAttributeImpl(new SequelizeAttributeRepository(attributeDb))
+  )
+);

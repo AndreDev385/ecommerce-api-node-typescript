@@ -1,30 +1,59 @@
-
 import express, { NextFunction, Request, Response } from "express";
 
-import { VariationModel } from "../../adapters/orm/sequelize/models/variation.model";
+import {
+  AttributesModel,
+  VariationModel,
+} from "../../adapters/orm/sequelize/models/variation.model";
+import { CreateVariationUseCase } from "../../application/usecases/variation/create-variation-usecase";
+import { ListVariationUseCase } from "../../application/usecases/variation/list-variation-usecase";
 
-const router = express.Router();
+export default function variationRouter(
+  listVariation: ListVariationUseCase,
+  createVariation: CreateVariationUseCase
+) {
+  const router = express.Router();
 
-router.get("/", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const product = await VariationModel.findAll();
-    res.json({ data: product });
-  } catch (err) {
-    next(err);
-  }
-});
+  router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await listVariation.execute();
+      res.json({ message: "Success", data: result });
+    } catch (err) {
+      next(err);
+    }
+  });
 
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const product = await VariationModel.create({
-      normalPrice: 20,
-      stock: 10,
-      productId: 1
-    });
-    res.json({ data: product });
-  } catch (err) {
-    next(err);
-  }
-});
+  router.post("/", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await createVariation.execute(req.body);
+      res.json({ message: "Created", data: result });
+    } catch (err) {
+      next(err);
+    }
+  });
 
-export default router;
+  router.get("/test", async (req: Request, res: Response, next: NextFunction) => {
+
+    const result = await VariationModel.create(
+      {
+        productId: 1,
+        normalPrice: 9.99,
+        attributes: [
+          {
+            name: "size",
+            value: "40",
+          },
+          {
+            name: "color",
+            value: "white",
+          }
+        ],
+      },
+      {
+        include: AttributesModel,
+      }
+    );
+    res.json(result);
+  });
+
+  return router;
+}

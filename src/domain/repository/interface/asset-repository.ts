@@ -1,7 +1,8 @@
-import { Asset, CreateAsset } from "../../entity/asset";
+import { Asset, CreateAsset, UpdateAsset } from "../../entity/asset";
 
 export interface AssetRepository {
   create(asset: CreateAsset): Promise<Asset>
   findAll(): Promise<Asset[]>;
-  upload(userId: number, file: File, fileExtension: string): Promise<Asset>;
+  findOne(id: number): Promise<Asset>
+  update(id: number, data: UpdateAsset): Promise<Asset>
 }

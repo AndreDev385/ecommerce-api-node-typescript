@@ -9,7 +9,7 @@ AssetModel.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: false,
+      autoIncrement: true,
     },
     /*owner: {
       type: DataTypes.INTEGER,
