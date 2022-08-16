@@ -8,6 +8,7 @@ import productRouter from "./product.routes";
 import variationRouter from "./variation.routes";
 import assetRouter from "./asset.routes";
 import attributeRouter from "./attribute.routes";
+import orderRoutes from "./order.routes";
 
 import { SequilizeUserRepository } from "../../adapters/repository/sequilize/user-repository";
 import {
@@ -15,6 +16,7 @@ import {
   attributeDb,
   brandDb,
   categoryDb,
+  orderDb,
   productDb,
   tokenDb,
   userDb,
@@ -60,6 +62,12 @@ import { UpdateAssetImpl } from "../../application/impl/assets/update-asset-impl
 import { ListAttributeImpl } from "../../application/impl/variation/list-attribute-impl";
 import { SequelizeAttributeRepository } from "../../adapters/repository/sequilize/attribute-repository";
 import { CreateAttributeImpl } from "../../application/impl/variation/create-attribute-impl";
+import { ListOrderImpl } from "../../application/impl/order/list-order-impl";
+import { SequelizeOrderRepository } from "../../adapters/repository/sequilize/order-repository";
+import { CreateOrderImpl } from "../../application/impl/order/create-order-impl";
+import { UpdateOrderImpl } from "../../application/impl/order/update-order-impl";
+import { FindOneOrderImpl } from "../../application/impl/order/findone-order-impl";
+import { ChangeOrderStatusImpl } from "../../application/impl/order/change-status-impl";
 
 export const router = express.Router();
 
@@ -149,5 +157,18 @@ router.use(
   attributeRouter(
     new ListAttributeImpl(new SequelizeAttributeRepository(attributeDb)),
     new CreateAttributeImpl(new SequelizeAttributeRepository(attributeDb))
+  )
+);
+
+router.use(
+  "/orders",
+  orderRoutes(
+    new ListOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
+    new CreateOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
+    new FindOneOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
+    new UpdateOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
+    new ChangeOrderStatusImpl(
+      new SequelizeOrderRepository(orderDb, variationDb)
+    )
   )
 );

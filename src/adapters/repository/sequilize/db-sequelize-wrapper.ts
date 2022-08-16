@@ -2,6 +2,7 @@ import { UpdateOptions } from "sequelize/types";
 import { AssetModel } from "../../orm/sequelize/models/asset.model";
 import { BrandModel } from "../../orm/sequelize/models/brand.model";
 import { CategoryModel } from "../../orm/sequelize/models/category.model";
+import { OrderModel } from "../../orm/sequelize/models/order.model";
 import { ProductModel } from "../../orm/sequelize/models/product.model";
 import { TokenModel } from "../../orm/sequelize/models/token.model";
 import { UserModel } from "../../orm/sequelize/models/user.model";
@@ -69,6 +70,13 @@ export const assetDb: SequelizeWrapper = {
 export const attributeDb: SequelizeWrapper = {
   findAll: (query) => AttributesModel.findAll(query),
   create: (doc) => AttributesModel.create(doc),
-  findOne: (query) => AssetModel.findOne(query),
-  update: (values, where) => AssetModel.update(values, where),
+  findOne: (query) => AttributesModel.findOne(query),
+  update: (values, where) => AttributesModel.update(values, where),
+};
+
+export const orderDb: SequelizeWrapper = {
+  findAll: (query) => OrderModel.findAll(query),
+  create: (doc) => OrderModel.create(doc),
+  findOne: (query) => OrderModel.findOne(query),
+  update: (values, where) => OrderModel.update(values, where),
 };

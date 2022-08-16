@@ -24,26 +24,6 @@ export const VariationModel = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    /*product: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: ProductModel,
-        key: "id",
-      },
-      allowNull: false,
-    },
-    images: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      references: {
-        model: AssetModel,
-        key: "id",
-      },
-      defaultValue: [],
-    },
-    attributes: {
-      type: DataTypes.ARRAY(DataTypes.JSON),
-      defaultValue: [],
-    },*/
     normalPrice: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -65,7 +45,6 @@ export const VariationModel = sequelize.define(
     },
   },
   {
-    //sequelize,
     timestamps: true,
   }
 );
@@ -81,7 +60,7 @@ AssetModel.belongsTo(VariationModel, {
 });
 
 export const Variation_Attributes = sequelize.define(
-  "Variation_Attributes",
+  "variations__attributes",
   {
     selfGranted: DataTypes.BOOLEAN,
   },

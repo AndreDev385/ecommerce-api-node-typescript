@@ -15,22 +15,6 @@ export class User {
   role: string;
   phoneNumber?: string;
 
-  constructor(
-    id: number,
-    name: string,
-    email: string,
-    password: string,
-    role: string,
-    phoneNumber: string
-  ) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.role = role;
-    this.phoneNumber = phoneNumber;
-  }
-
   static async hashPassword(password: string) {
     const encrypt = await bcrypt.hash(password, 10);
     return encrypt;

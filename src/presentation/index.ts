@@ -11,7 +11,7 @@ import "../adapters/orm/sequelize/models/variation.model";
 
 async function main() {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log("Database connected");
     server.listen(config.PORT);
     console.log(`Server running on port ${config.PORT}`);
