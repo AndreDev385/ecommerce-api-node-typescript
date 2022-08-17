@@ -6,7 +6,7 @@ export class UpdateOrderImpl implements UpdateOrderUseCase {
   constructor(private repository: OrderRepository) {}
   async execute(id: number, order: UpdateOrder): Promise<Order> {
     // Validate order data
-
+    Order.validateUpdateOrder(order)
     // Validate id
 
     // ->

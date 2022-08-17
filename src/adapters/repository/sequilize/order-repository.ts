@@ -12,22 +12,21 @@ import { UserModel } from "../../orm/sequelize/models/user.model";
 export class SequelizeOrderRepository implements OrderRepository {
   constructor(
     private orderDb: SequelizeWrapper,
-    private variationDb: SequelizeWrapper
+    //private variationDb: SequelizeWrapper
   ) {}
-  async create(order: CreateOrder): Promise<Order> {
-    let ids = order.variationIds;
-
-    const new_order = await this.orderDb.create({
-      totalPrice: order.totalPrice,
-      userId: order.userId,
-    });
+  async create(order: { userId: number; totalPrice: number }): Promise<any> {
+    /*let ids = order.variationIds;
 
     ids.forEach(async (id) => {
       const variation = await this.variationDb.findOne({ where: { id } });
-      await new_order.addVariation(variation);
     });
 
-    return new_order;
+    const new_order = await this.orderDb.create({
+      userId: order.userId,
+    });
+
+    return new_order;*/
+    return await this.orderDb.create(order);
   }
 
   async findAll(filters: object): Promise<Order[]> {

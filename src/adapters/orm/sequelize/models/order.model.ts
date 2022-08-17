@@ -16,6 +16,10 @@ export const OrderModel = sequelize.define(
       values: ["completed", "waiting", "canceled"],
       defaultValue: "waiting",
     },
+    totalPrice: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    }
   },
   {
     timestamps: true,

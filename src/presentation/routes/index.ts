@@ -163,12 +163,13 @@ router.use(
 router.use(
   "/orders",
   orderRoutes(
-    new ListOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
-    new CreateOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
-    new FindOneOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
-    new UpdateOrderImpl(new SequelizeOrderRepository(orderDb, variationDb)),
-    new ChangeOrderStatusImpl(
-      new SequelizeOrderRepository(orderDb, variationDb)
-    )
+    new ListOrderImpl(new SequelizeOrderRepository(orderDb)),
+    new CreateOrderImpl(
+      new SequelizeOrderRepository(orderDb),
+      new SequelizeVariationRepository(variationDb)
+    ),
+    new FindOneOrderImpl(new SequelizeOrderRepository(orderDb)),
+    new UpdateOrderImpl(new SequelizeOrderRepository(orderDb)),
+    new ChangeOrderStatusImpl(new SequelizeOrderRepository(orderDb))
   )
 );
