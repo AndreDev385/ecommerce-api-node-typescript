@@ -18,8 +18,8 @@ export const OrderModel = sequelize.define(
     },
     totalPrice: {
       type: DataTypes.FLOAT,
-      allowNull: false
-    }
+      //allowNull: false,
+    },
   },
   {
     timestamps: true,
@@ -36,6 +36,20 @@ OrderModel.belongsTo(UserModel, {
   targetKey: "id",
 });
 
+const Order_Variations = sequelize.define(
+  "order_variations",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true 
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+    }
+  },
+  { timestamps: true }
+);
 
 OrderModel.belongsToMany(VariationModel, {
   through: "order_variations",

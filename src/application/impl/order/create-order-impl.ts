@@ -13,25 +13,27 @@ export class CreateOrderImpl implements CreateOrderUseCase {
     //Validate order data
     Order.validateCreateOrder(order);
 
-    // find variations and calculate totalPrice
-    let variations: Variation[] = [];
+    // Crear la orden
+    const new_order = await this.orderRepo.create({ userId: order.userId });
+
+    // añadir variaciones, cantidad y calcular precio
     let price = 0;
-    order.variationIds.forEach(async (id) => {
+    for (const { id, quantity } of order.variations) {
       const variation = await this.variationRepo.findOne(id);
-      variations.push(variation);
-      price += variation.normalPrice;
-    });
+      if (!variation.isAvaible) {
+        throw new Error("Product not avaible");
+      }
+      price += variation.normalPrice * quantity;
+      variation.Order_Variations = {
+        quantity,
+      };
+      await new_order.addVariation(variation, { through: { quantity } });
+    }
 
-    // add Variations to order
-    const new_order = await this.orderRepo.create({
-      userId: order.userId,
-      totalPrice: price,
-    });
-    variations.forEach(async (v) => {
-      await new_order.addVariation(v);
-    });
+    // actualizar orden
+    await this.orderRepo.updateOrder(order.userId, { totalPrice: price });
 
-    await this.orderRepo.updateOrder(new_order.id, { totalPrice: price });
-    return await this.orderRepo.findById(new_order.id);
+    // return
+    return this.orderRepo.findById(order.userId);
   }
 }

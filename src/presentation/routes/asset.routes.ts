@@ -21,6 +21,7 @@ export default function assetRouter(
     }
   });
 
+  // cloudinary
   router.post(
     "/",
     checkJWT,
@@ -30,7 +31,7 @@ export default function assetRouter(
       try {
         console.log(req.body.user);
         const result = await uploadAsset.execute({
-          userId: 1,
+          userId: req.body.user,
           path: `${req.file?.path}`,
         });
         res.json({

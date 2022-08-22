@@ -14,19 +14,8 @@ export class SequelizeOrderRepository implements OrderRepository {
     private orderDb: SequelizeWrapper,
     //private variationDb: SequelizeWrapper
   ) {}
-  async create(order: { userId: number; totalPrice: number }): Promise<any> {
-    /*let ids = order.variationIds;
-
-    ids.forEach(async (id) => {
-      const variation = await this.variationDb.findOne({ where: { id } });
-    });
-
-    const new_order = await this.orderDb.create({
-      userId: order.userId,
-    });
-
-    return new_order;*/
-    return await this.orderDb.create(order);
+  async create(order: { userId: number; }): Promise<any> {
+    return await this.orderDb.create(order)
   }
 
   async findAll(filters: object): Promise<Order[]> {

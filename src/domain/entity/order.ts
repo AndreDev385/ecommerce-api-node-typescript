@@ -10,7 +10,7 @@ export type Status = "completed" | "waiting" | "canceled";
 export class Order {
   id: number;
   userId: number;
-  variationIds: number[];
+  variations: Variation[];
   totalPrice: number;
   status: Status;
 
@@ -34,11 +34,11 @@ export class Order {
 
 export interface CreateOrder {
   userId: number;
-  variationIds: number[];
+  variations: [{id:number, quantity: number}];
 }
 
 export interface UpdateOrder {
   userId?: number;
-  variationIds?: number[];
+  variations?: [{id:number, quantity: number}];
   totalPrice?: number;
 }

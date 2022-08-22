@@ -72,12 +72,30 @@ export default function orderRoutes(
   );
 
   router.patch(
-    "/:id",
+    "/:id/completed",
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const result = await changeOrderStatus.execute(
           Number(req.params.id),
-          req.body
+          "completed"
+        );
+        res.json({
+          message: "Success",
+          data: result,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  router.patch(
+    "/:id/canceled",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const result = await changeOrderStatus.execute(
+          Number(req.params.id),
+          "canceled"
         );
         res.json({
           message: "Success",

@@ -16,6 +16,7 @@ export class Variation {
   stock: number;
   isAvaible?: boolean;
   isActive?: boolean
+  Order_Variations?: { quantity: number; };
 
   static validateCreateVariation(data: CreateVariation) {
     const { error } = createVariationSchema.validate(data, {
