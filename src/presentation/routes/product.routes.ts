@@ -20,7 +20,7 @@ export default function productRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const product = await listProduct.execute();
-      res.json({ message: "Success", data: product });
+      res.json(product);
     } catch (err) {
       next(err);
     }
@@ -30,7 +30,7 @@ export default function productRouter(
     try {
       const { body } = req;
       const product = await createProduct.execute(body);
-      res.json({ message: "Product created", data: product });
+      res.json(product);
     } catch (err) {
       next(err);
     }
@@ -41,7 +41,7 @@ export default function productRouter(
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const product = await findOneProduct.execute(Number(req.params.id));
-        res.json({ message: "Success", data: product });
+        res.json(product);
       } catch (err) {
         next(err);
       }
@@ -55,7 +55,7 @@ export default function productRouter(
           Number(req.params.id),
           req.body
         );
-        res.json({ message: "Product updated", data: product });
+        res.json(product);
       } catch (err) {
         next(err);
       }
@@ -66,7 +66,7 @@ export default function productRouter(
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const product = await deleteProduct.execute(Number(req.params.id));
-        res.json({ message: "Product deleted" });
+        res.json(product);
       } catch (err) {
         next(err);
       }

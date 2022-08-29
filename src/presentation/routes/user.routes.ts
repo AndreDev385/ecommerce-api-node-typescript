@@ -17,7 +17,7 @@ export default function userRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const users = await listUsers.execute();
-      res.status(200).json({ message: "Success", data: users });
+      res.status(200).json(users);
     } catch (err: any) {
       next(err);
     }
@@ -27,7 +27,7 @@ export default function userRouter(
     try {
       const user = await createUser.execute(req.body);
       res.statusCode = 201;
-      res.json({ message: "User has been created", data: user });
+      res.json(user);
     } catch (err: any) {
       next(err);
     }
@@ -39,10 +39,7 @@ export default function userRouter(
       try {
         const { id } = req.params;
         const user = await findOne.execute(Number(id));
-        res.status(200).json({
-          message: "Success",
-          data: user,
-        });
+        res.status(200).json(user);
       } catch (err: any) {
         next(err);
       }
@@ -56,7 +53,7 @@ export default function userRouter(
         const { body } = req;
         const { id } = req.params;
         const user = await updateUserRole.execute(Number(id), body.role);
-        res.status(200).json({ message: "User role updated", data: user });
+        res.status(200).json(user);
       } catch (err: any) {
         next(err);
       }

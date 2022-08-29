@@ -10,18 +10,12 @@ export default function attributeRouter(
 
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     const result = await listAttributes.execute();
-    res.json({
-      message: "Success",
-      data: result,
-    });
+    res.json(result);
   });
 
   router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     const result = await createAttribute.execute(req.body);
-    res.json({
-      message: "Success",
-      data: result,
-    });
+    res.json(result);
   });
 
   router.get("/test", async(req:Request, res:Response, next:NextFunction) => {

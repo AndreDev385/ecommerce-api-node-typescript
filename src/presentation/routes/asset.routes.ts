@@ -15,7 +15,7 @@ export default function assetRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await listAssets.execute();
-      res.send({ message: "Success", data: result });
+      res.send(result);
     } catch (error) {
       next(error);
     }
@@ -34,10 +34,7 @@ export default function assetRouter(
           userId: req.body.user,
           path: `${req.file?.path}`,
         });
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (error) {
         next(error);
       }
@@ -62,7 +59,7 @@ export default function assetRouter(
           Number(req.params.id),
           req.body
         );
-        res.json({ message: "Success", data: result });
+        res.json(result);
       } catch (error) {
         next(error);
       }

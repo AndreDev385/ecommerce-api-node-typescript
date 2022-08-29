@@ -20,7 +20,7 @@ export default function categoryRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await listCategoryUseCase.execute();
-      res.json({ message: "Success", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -31,7 +31,7 @@ export default function categoryRouter(
       const { body } = req;
       const result = await createCategoryUseCase.execute(body);
 
-      res.json({ message: "Category created!", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -43,10 +43,7 @@ export default function categoryRouter(
       try {
         const { id } = req.params;
         const result = await findOneCategory.execute(Number(id));
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (err) {
         next(err);
       }
@@ -60,10 +57,7 @@ export default function categoryRouter(
         const { id } = req.params;
         const { body } = req;
         const result = await updateCategory.execute(Number(id), body);
-        res.json({
-          message: "Category updated successfully",
-          data: result,
-        });
+        res.json(result);
       } catch (err) {
         next(err);
       }
@@ -75,7 +69,7 @@ export default function categoryRouter(
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { id } = req.params;
-        const result = await deleteCategory.execute(Number(id));
+        await deleteCategory.execute(Number(id));
         res.json({
           message: "Category deleted successfully",
         });

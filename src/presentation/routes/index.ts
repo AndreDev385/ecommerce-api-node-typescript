@@ -100,7 +100,7 @@ router.use(
 );
 
 router.use(
-  "/category",
+  "/categories",
   categoryRouter(
     new ListCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
     new CreateCategoryImpl(new SequelizeCategoryRepository(categoryDb)),
@@ -111,7 +111,7 @@ router.use(
 );
 
 router.use(
-  "/brand",
+  "/brands",
   brandRouter(
     new CreateBrandImpl(new SequelizeBrandRepository(brandDb)),
     new ListBrandImpl(new SequelizeBrandRepository(brandDb)),
@@ -122,7 +122,7 @@ router.use(
 );
 
 router.use(
-  "/product",
+  "/products",
   productRouter(
     new ListProductImpl(new SequelizeProductRepository(productDb)),
     new CreateProductImpl(new SequelizeProductRepository(productDb)),
@@ -133,7 +133,7 @@ router.use(
 );
 
 router.use(
-  "/variation",
+  "/variations",
   variationRouter(
     new ListVariationImpl(new SequelizeVariationRepository(variationDb)),
     new CreateVariationImpl(new SequelizeVariationRepository(variationDb))

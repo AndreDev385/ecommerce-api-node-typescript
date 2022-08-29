@@ -16,7 +16,7 @@ export default function variationRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await listVariation.execute();
-      res.json({ message: "Success", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -25,7 +25,7 @@ export default function variationRouter(
   router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await createVariation.execute(req.body);
-      res.json({ message: "Created", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }

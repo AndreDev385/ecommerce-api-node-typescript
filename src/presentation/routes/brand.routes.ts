@@ -19,7 +19,7 @@ export default function brandRouter(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await listBrand.execute();
-      res.json({ message: "Success", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -29,7 +29,7 @@ export default function brandRouter(
     try {
       const { body } = req;
       const result = await createBrand.execute(body);
-      res.json({ message: "Brand Created", data: result });
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -40,7 +40,7 @@ export default function brandRouter(
       try {
         const { id } = req.params;
         const result = await findOneBrand.execute(Number(id));
-        res.json({ message: "Success", data: result });
+        res.json(result);
       } catch (err) {
         next(err);
       }
@@ -53,7 +53,7 @@ export default function brandRouter(
         const { id } = req.params;
         const { body } = req;
         const result = await updateBrand.execute(Number(id), body);
-        res.json({ message: "Brand Updated", data: result });
+        res.json(result);
       } catch (err) {
         next(err);
       }
@@ -65,7 +65,7 @@ export default function brandRouter(
       try {
         const { id } = req.params;
         const result = await deleteBrand.execute(Number(id));
-        res.json({ message: "Brand deleted", data: result });
+        res.json(result);
       } catch (err) {
         next(err);
       }

@@ -17,10 +17,7 @@ export default function orderRoutes(
   router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await listOrder.execute({});
-      res.json({
-        message: "Success",
-        data: result,
-      });
+      res.json(result);
     } catch (error) {
       next(error);
     }
@@ -29,10 +26,7 @@ export default function orderRoutes(
   router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await createOrder.execute(req.body);
-      res.json({
-        message: "Success",
-        data: result,
-      });
+      res.json(result);
     } catch (error) {
       next(error);
     }
@@ -43,10 +37,7 @@ export default function orderRoutes(
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const result = await findOneOrder.execute(Number(req.params.id));
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (error) {
         next(error);
       }
@@ -61,10 +52,7 @@ export default function orderRoutes(
           Number(req.params.id),
           req.body
         );
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (error) {
         next(error);
       }
@@ -79,10 +67,7 @@ export default function orderRoutes(
           Number(req.params.id),
           "completed"
         );
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (error) {
         next(error);
       }
@@ -97,10 +82,7 @@ export default function orderRoutes(
           Number(req.params.id),
           "canceled"
         );
-        res.json({
-          message: "Success",
-          data: result,
-        });
+        res.json(result);
       } catch (error) {
         next(error);
       }
