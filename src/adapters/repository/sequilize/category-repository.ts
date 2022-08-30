@@ -1,7 +1,7 @@
 import {
+  CreateCategoryDTO,
   Category,
-  CreateCategory,
-  UpdateCategory,
+  UpdateCategoryDTO,
 } from "../../../domain/entity/category";
 import { CategoryRepository } from "../../../domain/repository/interface/category-repository";
 import { AssetModel } from "../../orm/sequelize/models/asset.model";
@@ -14,14 +14,14 @@ export class SequelizeCategoryRepository implements CategoryRepository {
     this.database = database;
   }
 
-  async create(category: CreateCategory): Promise<Category> {
+  async create(category: CreateCategoryDTO): Promise<Category> {
     const result = await this.database.create(category);
     return result;
   }
 
   async findAll(): Promise<Category[]> {
     const result = await this.database.findAll({
-      include: ProductModel,
+      include: [ProductModel, AssetModel],
       where: { isActive: true },
     });
     return result;
@@ -43,7 +43,7 @@ export class SequelizeCategoryRepository implements CategoryRepository {
     return result;
   }
 
-  async update(id: number, data: UpdateCategory): Promise<Category> {
+  async update(id: number, data: UpdateCategoryDTO): Promise<Category> {
     const result = await this.database.update(
       data,
       { where: { isActive: true, id } }

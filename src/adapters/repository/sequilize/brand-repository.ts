@@ -1,4 +1,8 @@
-import { Brand, CreateBrand, UpdateBrand } from "../../../domain/entity/brand";
+import {
+  CreateBrandDTO,
+  Brand,
+  UpdateBrandDTO,
+} from "../../../domain/entity/brand";
 import { BrandRepository } from "../../../domain/repository/interface/brand-repository";
 import { AssetModel } from "../../orm/sequelize/models/asset.model";
 import { ProductModel } from "../../orm/sequelize/models/product.model";
@@ -18,7 +22,7 @@ export class SequelizeBrandRepository implements BrandRepository {
     return result;
   }
 
-  async create(brand: CreateBrand): Promise<Brand> {
+  async create(brand: CreateBrandDTO): Promise<Brand> {
     const result = await this.database.create(brand);
     return result;
   }
@@ -39,7 +43,7 @@ export class SequelizeBrandRepository implements BrandRepository {
     return result;
   }
 
-  async update(id: number, data: UpdateBrand): Promise<Brand> {
+  async update(id: number, data: UpdateBrandDTO): Promise<Brand> {
     const result = await this.database.update(data, { where: { id } });
     return result;
   }

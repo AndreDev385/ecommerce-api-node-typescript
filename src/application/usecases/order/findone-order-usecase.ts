@@ -1,5 +1,5 @@
-import { Order } from "../../../domain/entity/order";
+import { Order, ReadOrderDTO } from "../../../domain/entity/order";
 
 export interface FindOneOrderUseCase {
-  execute(id: number): Promise<Order>;
+  execute(id: number): Promise<ReadOrderDTO>;
 }

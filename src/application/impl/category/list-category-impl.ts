@@ -1,6 +1,7 @@
-import { Category } from "../../../domain/entity/category";
+import { Category, ReadCategoryDTO } from "../../../domain/entity/category";
 import { CategoryRepository } from "../../../domain/repository/interface/category-repository";
 import { ListCategoriesUseCase } from "../../usecases/category/list-categories";
+import { CreateReadCategoryDTO } from "../../utils/createDtos";
 
 export class ListCategoryImpl implements ListCategoriesUseCase {
   private categoryRepository: CategoryRepository;
@@ -8,8 +9,8 @@ export class ListCategoryImpl implements ListCategoriesUseCase {
     this.categoryRepository = repository;
   }
 
-  async execute(): Promise<Category[]> {
-    const result = await this.categoryRepository.findAll();
-    return result
+  async execute(): Promise<ReadCategoryDTO[]> {
+    const categories = await this.categoryRepository.findAll();
+    return categories.map((c) => CreateReadCategoryDTO(c));
   }
 }

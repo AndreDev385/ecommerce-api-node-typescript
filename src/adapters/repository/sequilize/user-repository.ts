@@ -1,4 +1,4 @@
-import { CreateUser, User } from "../../../domain/entity/user";
+import { CreateUser, ReadUserDTO, User } from "../../../domain/entity/user";
 import { NotFoundError } from "../../../domain/exceptions/exceptions";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { OrderModel } from "../../orm/sequelize/models/order.model";
@@ -18,7 +18,7 @@ export class SequilizeUserRepository implements UserRepository {
   async findAll(): Promise<User[]> {
     const result = await this.database.findAll({
       where: { isActive: true },
-      include: OrderModel
+      include: OrderModel,
     });
     return result;
   }
@@ -26,7 +26,7 @@ export class SequilizeUserRepository implements UserRepository {
   async findOne(id: number): Promise<User> {
     const result = await this.database.findOne({
       where: { id, isActive: true },
-      include: OrderModel
+      include: OrderModel,
     });
     return result;
   }

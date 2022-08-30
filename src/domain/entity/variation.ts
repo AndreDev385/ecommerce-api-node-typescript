@@ -1,22 +1,27 @@
 import { createVariationSchema } from "../schemas/variation.schema";
-import { Asset } from "./asset";
+import { Asset, ReadAssetDTO } from "./asset";
 
-export type Attribute = {
+export class Attribute {
   name: string;
   value: string;
-};
+
+  constructor(name: string, value: string) {
+    this.name = name;
+    this.value = value;
+  }
+}
 
 export class Variation {
   id: number;
   productId: number;
-  images?: number[];
+  assets: Asset[];
   attributes: Array<Attribute>;
   normalPrice: number;
   offerPrice: number;
   stock: number;
-  isAvaible?: boolean;
-  isActive?: boolean
-  Order_Variations?: { quantity: number; };
+  isAvaible: boolean;
+  isActive: boolean;
+  Order_Variations?: { quantity: number };
 
   static validateCreateVariation(data: CreateVariation) {
     const { error } = createVariationSchema.validate(data, {
@@ -41,7 +46,7 @@ export interface CreateVariation {
   offerPrice?: number;
   stock?: number;
   isAvaible?: boolean;
-  isActive?: boolean
+  isActive?: boolean;
 }
 
 export interface UpdateVariation {
@@ -52,5 +57,38 @@ export interface UpdateVariation {
   offerPrice?: number;
   stock?: number;
   isAvaible?: boolean;
-  isActive?: boolean
+  isActive?: boolean;
+}
+
+export class ReadVariationDTO {
+  id: number;
+  productId: number;
+  assets: ReadAssetDTO[];
+  attributes: Attribute[];
+  normalPrice: number;
+  offerPrice: number;
+  stock: number;
+  isAvaible: boolean;
+  Order_Variations:object
+
+  constructor(
+    id: number,
+    productId: number,
+    normalPrice: number,
+    offerPrice: number,
+    stock: number,
+    isAvaible: boolean,
+    attributes: Attribute[],
+    assets: ReadAssetDTO[]
+  ) {
+    this.id = id;
+    this.productId = productId;
+    this.normalPrice = normalPrice;
+    this.offerPrice = offerPrice;
+    this.stock = stock;
+    this.isAvaible = isAvaible;
+    this.attributes = attributes;
+    this.assets = assets;
+    //this.Order_Variations = {}
+  }
 }

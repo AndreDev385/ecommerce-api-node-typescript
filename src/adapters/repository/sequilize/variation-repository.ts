@@ -1,5 +1,6 @@
 import {
   CreateVariation,
+  ReadVariationDTO,
   UpdateVariation,
   Variation,
 } from "../../../domain/entity/variation";

@@ -1,5 +1,5 @@
-import { Product } from "../../../domain/entity/product";
+import { Product, ReadProductDTO } from "../../../domain/entity/product";
 
 export interface FindOneProductUseCase {
-  execute(id: number): Promise<Product>
+  execute(id: number): Promise<ReadProductDTO>
 }

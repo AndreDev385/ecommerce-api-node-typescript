@@ -1,5 +1,5 @@
-import { ReadUser } from "../../../domain/entity/user";
+import { ReadUser, ReadUserDTO } from "../../../domain/entity/user";
 
 export interface ListUserUseCase {
-  execute(): Promise<ReadUser[]>;
+  execute(): Promise<ReadUserDTO[]>;
 }

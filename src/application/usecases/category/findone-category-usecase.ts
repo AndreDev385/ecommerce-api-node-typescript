@@ -1,5 +1,5 @@
-import { Category } from "../../../domain/entity/category";
+import { Category, ReadCategoryDTO } from "../../../domain/entity/category";
 
 export interface FindOneCategoryUseCase {
-  execute(id: number): Promise<Category>;
+  execute(id: number): Promise<ReadCategoryDTO>;
 }

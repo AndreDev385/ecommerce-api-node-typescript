@@ -12,6 +12,6 @@ export class DeleteCategoryImpl implements DeleteCategoryUseCase {
   async execute(id: number): Promise<void> {
     const category = await this.categoryRepository.findById(id);
     if (!category) throw new NotFoundError("Category");
-    const result = await this.categoryRepository.delete(id);
+    await this.categoryRepository.delete(id);
   }
 }

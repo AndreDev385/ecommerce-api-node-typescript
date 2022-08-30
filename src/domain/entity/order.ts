@@ -3,7 +3,7 @@ import {
   updateOrderSchema,
   updateOrderStatusSchema,
 } from "../schemas/order.schema";
-import { Variation } from "./variation";
+import { ReadVariationDTO, Variation } from "./variation";
 
 export type Status = "completed" | "waiting" | "canceled";
 
@@ -34,11 +34,33 @@ export class Order {
 
 export interface CreateOrder {
   userId: number;
-  variations: [{id:number, quantity: number}];
+  variations: [{ id: number; quantity: number }];
 }
 
 export interface UpdateOrder {
   userId?: number;
-  variations?: [{id:number, quantity: number}];
+  variations?: [{ id: number; quantity: number }];
   totalPrice?: number;
+}
+
+export class ReadOrderDTO {
+  id: number;
+  userId: number;
+  variations: ReadVariationDTO[];
+  totalPrice: number;
+  status: Status;
+
+  constructor(
+    id: number,
+    userId: number,
+    variations: ReadVariationDTO[],
+    totalPrice: number,
+    status: Status
+  ) {
+    this.id = id;
+    this.userId = userId;
+    this.variations = variations;
+    this.totalPrice = totalPrice;
+    this.status = status;
+  }
 }

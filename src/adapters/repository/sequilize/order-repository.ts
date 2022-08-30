@@ -19,6 +19,7 @@ export class SequelizeOrderRepository implements OrderRepository {
   }
 
   async findAll(filters: object): Promise<Order[]> {
+
     return await this.orderDb.findAll({
       where: filters,
       include: {
@@ -33,7 +34,7 @@ export class SequelizeOrderRepository implements OrderRepository {
   async findById(id: number): Promise<Order> {
     return await this.orderDb.findOne({
       where: { id },
-      include: [VariationModel, UserModel],
+      include: [VariationModel],
     });
   }
 

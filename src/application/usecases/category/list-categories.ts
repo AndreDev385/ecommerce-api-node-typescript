@@ -1,5 +1,5 @@
-import { Category } from "../../../domain/entity/category";
+import { Category, ReadCategoryDTO } from "../../../domain/entity/category";
 
 export interface ListCategoriesUseCase {
-  execute(): Promise<Category[]>
+  execute(): Promise<ReadCategoryDTO[]>
 }

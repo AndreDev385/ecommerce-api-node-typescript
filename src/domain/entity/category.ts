@@ -9,19 +9,19 @@ export class Category {
   id: number;
   name: string;
   slug: string;
-  title?: string;
-  description?: string;
+  description: string;
   tags: Array<string>;
-  products?: Product[];
+  products: Product[];
+  asset: Asset | null
 
-  static validateCreateCategory(category: CreateCategory) {
+  static validateCreateCategory(category: CreateCategoryDTO) {
     const { error } = createCategorySchema.validate(category, {
       abortEarly: false,
     });
     if (error) throw error;
   }
 
-  static validateUpdateCategory(data: UpdateCategory) {
+  static validateUpdateCategory(data: UpdateCategoryDTO) {
     const { error } = updateCategorySchema.validate(data, {
       abortEarly: false,
     });
@@ -29,7 +29,7 @@ export class Category {
   }
 }
 
-export interface CreateCategory {
+export interface CreateCategoryDTO {
   name: string;
   slug: string;
   title?: string;
@@ -37,10 +37,38 @@ export interface CreateCategory {
   tags?: Array<string>;
 }
 
-export interface UpdateCategory {
+export interface UpdateCategoryDTO {
   name?: string;
   slug?: string;
   title?: string;
   description?: string;
   tags?: Array<string>;
+}
+
+export class ReadCategoryDTO {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  tags: Array<string>;
+  products: Product[];
+  asset: Asset | null;
+
+  constructor(
+    id: number,
+    name: string,
+    slug: string,
+    description: string,
+    tags: string[],
+    products: Product[],
+    asset: Asset | null
+  ) {
+    this.id = id;
+    this.name = name;
+    this.slug = slug;
+    this.description = description;
+    this.tags = tags;
+    this.products = products;
+    this.asset = asset;
+  }
 }

@@ -13,7 +13,7 @@ export class User {
   email: string;
   password: string;
   role: string;
-  phoneNumber?: string;
+  phoneNumber: string;
 
   static async hashPassword(password: string) {
     const encrypt = await bcrypt.hash(password, 10);
@@ -70,4 +70,26 @@ export interface ReadUser extends BaseUser {
 
 export interface CreateUser extends BaseUser {
   password: string;
+}
+
+export class ReadUserDTO {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  phoneNumber: string;
+
+  constructor(
+    id: number,
+    name: string,
+    email: string,
+    role: string,
+    phoneNumber: string
+  ) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.role = role;
+    this.phoneNumber = phoneNumber;
+  }
 }

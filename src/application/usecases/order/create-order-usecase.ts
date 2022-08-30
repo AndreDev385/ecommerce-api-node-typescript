@@ -1,5 +1,5 @@
-import { CreateOrder, Order } from "../../../domain/entity/order";
+import { CreateOrder, Order, ReadOrderDTO } from "../../../domain/entity/order";
 
 export interface CreateOrderUseCase {
-  execute(order: CreateOrder): Promise<Order>
+  execute(order: CreateOrder): Promise<ReadOrderDTO | void>
 }

@@ -1,4 +1,9 @@
-import { CreateProduct, Product, UpdateProduct } from "../../entity/product";
+import {
+  CreateProduct,
+  Product,
+  ReadProductDTO,
+  UpdateProduct,
+} from "../../entity/product";
 
 export interface ProductRepository {
   create(product: CreateProduct): Promise<Product>;

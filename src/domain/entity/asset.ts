@@ -4,7 +4,7 @@ export class Asset {
   id: number;
   owner: number;
   originalUrl: string;
-  optimizedUrl?: string;
+  optimizedUrl: string;
   variationId?: number;
   productId?: number;
   categoryId?: number;
@@ -32,4 +32,16 @@ export interface UpdateAsset {
   productId?: number;
   brandId?: number;
   categoryId?: number;
+}
+
+export class ReadAssetDTO {
+  id: number;
+  originalUrl: string;
+  optimizedUrl: string | null;
+
+  constructor(id: number, originalUrl: string, optimizeUrl: string | null) {
+    this.id = id;
+    this.originalUrl = originalUrl;
+    this.optimizedUrl = optimizeUrl;
+  }
 }

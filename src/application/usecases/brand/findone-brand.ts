@@ -1,5 +1,5 @@
-import { Brand } from "../../../domain/entity/brand";
+import { Brand, ReadBrandDTO } from "../../../domain/entity/brand";
 
 export interface FindOneBrandUseCase {
-  execute(id: number): Promise<Brand>;
+  execute(id: number): Promise<ReadBrandDTO>;
 }
