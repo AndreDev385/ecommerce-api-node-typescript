@@ -1,4 +1,4 @@
-import { ReadUser, ReadUserDTO } from "../../../domain/entity/user";
+import { ReadUserDTO } from "../../../domain/entity/user";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { ListUserUseCase } from "../../usecases/user/list-user-usecase";
 import { CreateReadUserDTO } from "../../utils/createDtos";

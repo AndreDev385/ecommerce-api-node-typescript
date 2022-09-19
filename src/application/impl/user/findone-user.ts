@@ -1,4 +1,4 @@
-import { ReadUser, ReadUserDTO } from "../../../domain/entity/user";
+import { ReadUserDTO } from "../../../domain/entity/user";
 import { NotFoundError } from "../../../domain/exceptions/exceptions";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { FindOneUserUseCase } from "../../usecases/user/findone-user-usecase";

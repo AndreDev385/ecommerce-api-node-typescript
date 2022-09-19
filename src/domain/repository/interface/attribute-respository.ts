@@ -1,6 +1,6 @@
-import { Attribute } from "../../entity/variation";
+import { Attribute } from '../../entity/variation';
 
 export interface AttributeRepository {
-  create(attribute: Attribute): Promise<Attribute>;
-  findAll(): Promise<Attribute[]>;
+    create(attribute: Attribute): Promise<Attribute>;
+    findAll(): Promise<Attribute[]>;
 }

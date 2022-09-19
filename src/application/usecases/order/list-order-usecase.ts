@@ -1,5 +1,5 @@
-import { Order, ReadOrderDTO } from "../../../domain/entity/order";
+import { ReadOrderDTO } from '../../../domain/dtos/order-dtos';
 
 export interface ListOrderUseCase {
-  execute(filters: object): Promise<ReadOrderDTO[]>
+    execute(filters: object): Promise<ReadOrderDTO[]>;
 }

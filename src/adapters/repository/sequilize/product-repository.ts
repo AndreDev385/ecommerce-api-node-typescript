@@ -1,7 +1,7 @@
 import {
-  CreateProduct,
+  CreateProductDTO,
   Product,
-  UpdateProduct,
+  UpdateProductDTO,
 } from "../../../domain/entity/product";
 import { ProductRepository } from "../../../domain/repository/interface/product-repository";
 import { AssetModel } from "../../orm/sequelize/models/asset.model";
@@ -17,7 +17,7 @@ export class SequelizeProductRepository implements ProductRepository {
     this.database = database;
   }
 
-  async create(product: CreateProduct): Promise<Product> {
+  async create(product: CreateProductDTO): Promise<Product> {
     return await this.database.create(product);
   }
 
@@ -41,7 +41,7 @@ export class SequelizeProductRepository implements ProductRepository {
     });
   }
 
-  async update(id: number, data: UpdateProduct): Promise<Product> {
+  async update(id: number, data: UpdateProductDTO): Promise<Product> {
     return await this.database.update(data, { where: { id } });
   }
 

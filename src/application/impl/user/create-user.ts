@@ -1,4 +1,4 @@
-import { ReadUser, CreateUser, User, ReadUserDTO } from "../../../domain/entity/user";
+import { User, ReadUserDTO, CreateUserDTO } from "../../../domain/entity/user";
 import { CreateUserUseCase } from "../../usecases/user/create-user-usecase";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { CreateReadUserDTO } from "../../utils/createDtos";
@@ -10,7 +10,7 @@ export class CreateUserImpl implements CreateUserUseCase {
     this.userRepository = us;
   }
 
-  async execute(user: CreateUser): Promise<ReadUserDTO> {
+  async execute(user: CreateUserDTO): Promise<ReadUserDTO> {
     User.validateCreateUserData(user);
     const emailInUse = await this.userRepository.findByEmail(user.email);
     if (emailInUse) throw new Error("Email already in use");

@@ -1,90 +1,115 @@
-import {
-  createProductSchema,
-  UpdateProductSchema,
-} from "../schemas/product.schema";
-import { Asset, ReadAssetDTO } from "./asset";
-import { Brand } from "./brand";
-import { Category } from "./category";
-import { ReadVariationDTO, Variation } from "./variation";
+import { typeCheck } from 'type-check';
+import { Asset } from './asset';
+import { Variation } from './variation';
 
 export class Product {
-  id: number;
-  name: string;
-  brandId: number;
-  categoryId: number;
-  description: string;
-  tags: string[];
-  asset: Asset | null;
-  variations: Variation[];
+    private id: string | null;
+    private name: string;
+    private brandId: string;
+    private categoryId: string;
+    private description: string | null;
+    private tags: Array<string> = [];
+    private asset: Asset | null;
+    private variations: Array<Variation> = [];
 
-  constructor(
-    id: number,
-    name: string,
-    brandId: number,
-    categoryId: number,
-    description: string,
-    tags: string[]
-  ) {
-    this.id = id;
-    this.name = name;
-    this.brandId = brandId;
-    this.categoryId = categoryId;
-    this.description = description;
-    this.tags = tags;
-  }
+    constructor(
+        name: string,
+        brandId: string,
+        categoryId: string,
+        id?: string | null,
+        description?: string | null,
+        tags?: Array<string>,
+        variations?: Array<Variation>
+    ) {
+        if (id) this.setId(id);
+        this.setName(name);
+        this.setBrand(brandId);
+        this.setCategory(categoryId);
+        if (description) this.setDescription(description);
+        if (tags) {
+            for (const tag of tags) {
+                this.addTags(tag);
+            }
+        }
+        if (variations) {
+            for (const variation of variations) {
+                this.addVariation(variation);
+            }
+        }
+    }
 
-  static validateCreateProduct(data: CreateProduct) {
-    const { error } = createProductSchema.validate(data, { abortEarly: false });
-    if (error) throw error;
-  }
-  static validateUpdateProduct(data: UpdateProduct) {
-    const { error } = UpdateProductSchema.validate(data, { abortEarly: false });
-    if (error) throw error;
-  }
-}
+    setId(id: string): void {
+        if (!this.id) {
+            this.id = id;
+        }
+    }
 
-export interface CreateProduct {
-  name: string;
-  brandId: number;
-  categoryId: number;
-  description?: string;
-  tags?: string[];
-}
+    getId(): string | null {
+        return this.id;
+    }
 
-export interface UpdateProduct {
-  name?: string;
-  brand?: Brand;
-  description?: string;
-  tags?: string[];
-}
+    setName(name: string): void {
+        if (!typeCheck('String', name)) {
+            throw new Error('Name should be a string');
+        }
+    }
 
-export class ReadProductDTO {
-  id: number;
-  name: string;
-  brandId: number;
-  categoryId: number;
-  description: string;
-  tags: string[];
-  asset: ReadAssetDTO | null;
-  variations: ReadVariationDTO[];
+    getName(): string {
+        return this.name;
+    }
 
-  constructor(
-    id: number,
-    name: string,
-    brandId: number,
-    categoryId: number,
-    description: string,
-    tags: string[],
-    asset: ReadAssetDTO | null,
-    variations: ReadVariationDTO[]
-  ) {
-    this.id = id;
-    this.name = name;
-    this.brandId = brandId;
-    this.categoryId = categoryId;
-    this.description = description;
-    this.tags = tags;
-    this.asset = asset;
-    this.variations = variations;
-  }
+    setBrand(brand: string) {
+        this.brandId = brand;
+    }
+
+    getBrand(): string {
+        return this.brandId;
+    }
+
+    setCategory(category: string): void {
+        this.categoryId = category;
+    }
+
+    getCategory(): string {
+        return this.categoryId;
+    }
+
+    setDescription(str: string) {
+        if (!typeCheck('String', str)) {
+            throw new Error('Description should be a string');
+        }
+
+        this.description = this.description;
+    }
+
+    getDescription(): string | null {
+        return this.description;
+    }
+
+    addTags(tag: string): void {
+        if (!typeCheck('String', tag)) {
+            throw new Error('Tag should be a string');
+        }
+        this.tags.push(tag);
+    }
+
+    getTags(): Array<string> {
+        return this.tags;
+    }
+
+    setAsset(asset: Asset): void {
+        this.asset = asset;
+    }
+
+    getAsset(): Asset | null {
+        return this.asset;
+    }
+
+    addVariation(variation: Variation): void {
+        this.variations.push(variation);
+    }
+
+    getVariations(): Array<Variation> {
+        return this.variations;
+    }
 }

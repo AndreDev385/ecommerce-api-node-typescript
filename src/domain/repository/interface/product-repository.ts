@@ -1,14 +1,9 @@
-import {
-  CreateProduct,
-  Product,
-  ReadProductDTO,
-  UpdateProduct,
-} from "../../entity/product";
+import { Product } from '../../entity/product';
 
 export interface ProductRepository {
-  create(product: CreateProduct): Promise<Product>;
-  findAll(): Promise<Product[]>;
-  findOne(id: number): Promise<Product>;
-  update(id: number, data: UpdateProduct): Promise<Product>;
-  delete(id: number): Promise<void>;
+    create(product: Product): Promise<Product>;
+    findAll(): Promise<Product[]>;
+    findOne(id: string): Promise<Product>;
+    update(product: Product): Promise<Product>;
+    delete(id: string): Promise<void>;
 }

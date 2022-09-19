@@ -1,5 +1,5 @@
-import { Product, ReadProductDTO } from "../../../domain/entity/product";
+import { ReadProductDTO } from '../../../domain/dtos/product-dtos';
 
 export interface ListProductUseCase {
-  execute(): Promise<ReadProductDTO[]>
+    execute(): Promise<ReadProductDTO[]>;
 }

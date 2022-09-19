@@ -1,5 +1,5 @@
-import { Asset } from "../../../domain/entity/asset";
+import { ReadAssetDTO } from "../../../domain/dtos/asset-dtos";
 
 export interface ListAssetsUseCase {
-  execute(): Promise<Asset[]>;
+  execute(): Promise<ReadAssetDTO[]>;
 }

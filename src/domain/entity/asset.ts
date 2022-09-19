@@ -1,47 +1,49 @@
-import { updateAsset } from "../schemas/asset.schema";
+import { typeCheck } from 'type-check';
 
 export class Asset {
-  id: number;
-  owner: number;
-  originalUrl: string;
-  optimizedUrl: string;
-  variationId?: number;
-  productId?: number;
-  categoryId?: number;
-  brandId?: number;
+    private id: string | null;
+    private originalUrl: string;
+    private optimizedUrl: string | null;
 
-  static validateUpdateAsset(data: UpdateAsset) {
-    const { error } = updateAsset.validate(data, { abortEarly: false });
-    if (error) throw error;
-  }
-}
+    constructor(
+        originalUrl: string,
+        id?: string | null,
+        optimizedUrl?: string | null
+    ) {
+        if (id) this.setId(id);
+        this.setOriginalUrl(originalUrl);
+        if (optimizedUrl) this.setOptimizedUrl(optimizedUrl);
+    }
 
-export interface CreateAsset {
-  owner: number;
-  originalUrl: string;
-  optimizedUrl?: string;
-  variationId?: number;
-  productId?: number;
-  categoryId?: number;
-  brandId?: number;
-}
+    setId(id: string): void {
+        if (!this.id) {
+            this.id = id;
+        }
+    }
 
-export interface UpdateAsset {
-  id: number;
-  variarionId?: number;
-  productId?: number;
-  brandId?: number;
-  categoryId?: number;
-}
+    getId(): string | null {
+        return this.id;
+    }
 
-export class ReadAssetDTO {
-  id: number;
-  originalUrl: string;
-  optimizedUrl: string | null;
+    setOriginalUrl(url: string): void {
+        if (!typeCheck('String', url)) {
+            throw new Error('Url should be a string');
+        }
+        this.originalUrl = url;
+    }
 
-  constructor(id: number, originalUrl: string, optimizeUrl: string | null) {
-    this.id = id;
-    this.originalUrl = originalUrl;
-    this.optimizedUrl = optimizeUrl;
-  }
+    getOriginalUrl(): string {
+        return this.originalUrl;
+    }
+
+    setOptimizedUrl(url: string): void {
+        if (!typeCheck('String', url)) {
+            throw new Error('Url should be a string');
+        }
+        this.optimizedUrl = url
+    }
+
+    getOptimizedUrl(): string | null {
+        return this.optimizedUrl;
+    }
 }

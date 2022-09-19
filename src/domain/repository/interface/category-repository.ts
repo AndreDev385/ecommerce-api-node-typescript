@@ -1,10 +1,10 @@
-import { CreateCategoryDTO, Category, UpdateCategoryDTO, ReadCategoryDTO } from "../../entity/category";
+import { Category } from '../../entity/category';
 
 export interface CategoryRepository {
-  create(category: CreateCategoryDTO): Promise<Category>;
-  findAll(): Promise<Category[]>;
-  findName(name: string): Promise<Category>
-  findById(id: number): Promise<Category>
-  update(id: number, data: UpdateCategoryDTO): Promise<Category>
-  delete(id: number): Promise<void>
+    create(category: Category): Promise<Category>;
+    findAll(): Promise<Category[]>;
+    findName(name: string): Promise<Category>;
+    findById(id: string): Promise<Category>;
+    update(category: Category): Promise<Category>;
+    delete(id: string): Promise<void>;
 }

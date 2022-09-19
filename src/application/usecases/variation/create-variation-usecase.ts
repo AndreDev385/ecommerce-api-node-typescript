@@ -1,5 +1,5 @@
-import { CreateVariation, ReadVariationDTO, Variation } from "../../../domain/entity/variation";
+import { CreateVariation, ReadVariationDTO } from '../../../domain/dtos/variation-dtos';
 
 export interface CreateVariationUseCase {
-  execute(variation: CreateVariation): Promise<ReadVariationDTO>
+    execute(variation: CreateVariation): Promise<ReadVariationDTO>;
 }

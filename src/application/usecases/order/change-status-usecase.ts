@@ -1,5 +1,5 @@
-import { Status } from "cloudinary";
+import { Status } from 'cloudinary';
 
 export interface ChangeOrderStatusUseCase {
-  execute(id: number, status: Status): Promise<void>;
+    execute(id: string, status: Status): Promise<void>;
 }

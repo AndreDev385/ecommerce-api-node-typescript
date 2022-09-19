@@ -1,4 +1,3 @@
-import { ReadUser } from "../../../domain/entity/user";
 import { NotFoundError } from "../../../domain/exceptions/exceptions";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { DeleteUserUseCase } from "../../usecases/user/delete-user-usecase";

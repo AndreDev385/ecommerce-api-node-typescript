@@ -1,5 +1,5 @@
-import { Brand, ReadBrandDTO, UpdateBrandDTO } from "../../../domain/entity/brand";
+import { InputBrandDto, OutputBrandDto } from "../../../domain/dtos/brand-dtos";
 
 export interface UpdateBrandUseCase {
-  execute(id: number, data: UpdateBrandDTO): Promise<ReadBrandDTO>;
+  execute(brand: InputBrandDto): Promise<OutputBrandDto>;
 }

@@ -1,9 +1,9 @@
-import { CreateOrder, Order, Status, UpdateOrder } from "../../entity/order";
+import { Order, Status } from '../../entity/order';
 
 export interface OrderRepository {
-  create(order: { userId: number }): Promise<any>;
-  findAll(filters: object): Promise<Order[]>;
-  findById(id: number): Promise<Order>;
-  updateOrder(id: number, order: UpdateOrder): Promise<Order>;
-  changeStatus(id: number, status: Status): Promise<void>;
+    create(order: { userId: number }): Promise<any>;
+    findAll(filters: object): Promise<Order[]>;
+    findById(id: string): Promise<Order>;
+    updateOrder(order: Order): Promise<Order>;
+    changeStatus(id: string, status: Status): Promise<void>;
 }

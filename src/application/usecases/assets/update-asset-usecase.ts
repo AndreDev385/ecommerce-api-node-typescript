@@ -1,5 +1,5 @@
-import { Asset, UpdateAsset } from "../../../domain/entity/asset";
+import { CreateAssetDTO, ReadAssetDTO } from '../../../domain/dtos/asset-dtos';
 
 export interface UpdateAssetUseCase {
-  execute(id: number, asset: UpdateAsset): Promise<Asset>
+    execute(asset: CreateAssetDTO): Promise<ReadAssetDTO>;
 }

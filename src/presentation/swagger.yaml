@@ -11,6 +11,8 @@ definition:
       User:
         type: object
         properties:
+          id:
+            type: number
           name:
             type: string
           email:
@@ -26,6 +28,134 @@ definition:
           - email
           - password
           - role
+      Asset:
+        type: object
+        properties:
+          id:
+            type: number
+          owner:
+            type: number
+          originalUrl:
+            type: string
+          optimizedUrl:
+            type: string
+        required:
+          - owner
+          - originalUrl 
+      Category:
+        type: object
+        properties:
+          id:
+            type: number
+          name: 
+            type: string
+          slug:
+            type: string
+          description:
+            type: string
+          tags: 
+            type: array
+            items: 
+              type: string
+          asset:
+            $ref:
+              "#/components/schemas/Asset"
+          products:
+            type: array
+            items:
+              $ref:
+                "#/components/schemas/Product"
+        required:
+          - name
+          - slug
+      Brand:
+        type: object
+        properties:
+          name: 
+            type: string
+          description:
+            type: string
+          asset:
+            $ref:
+              "#/components/schemas/Asset"
+          products:
+            type: array
+            items:
+              $ref: 
+                "#/components/schemas/Product"
+        required:
+          - name
+      Attribute:
+        type: object
+        properties:
+          id: 
+            type: number
+          name: 
+            type: string
+          value:
+            type: string
+        required:
+          - name
+          - value
+      Variation:
+        type: object
+        properties:
+          id:
+            type: number
+          productId:
+            type: number
+          assets:
+            type: array
+            items:
+              $ref: 
+                "#/components/schemas/Asset"
+          attributes:
+            type: array
+            items:
+              $ref:
+                "#/components/schemas/Attribute"
+          normalPrice:
+            type: number
+          offerPrice:
+            type: number
+          stock: 
+            type: number
+          isAvaible:
+            type: boolean
+        required:
+          - productId
+          - attributes
+          - normalPrice
+      Product:
+        type: object
+        properties:
+          id:
+            type: number
+          name:
+            type: string
+          brandId:
+            type: number
+          categoryId:
+            type: number
+          description:
+            type: string
+          tags:
+            type: array
+            items:
+              type: string
+          asset:
+            type: array
+            items: 
+              type: number
+          variations:
+            type: array
+            items:
+              $ref: 
+                "#/components/schemas/Variation"
+        required:
+          - name
+          - brandId
+          - categoryId
   paths:
     #Users paths
     /api/v1/users:
@@ -40,7 +170,8 @@ definition:
                 schema:
                   type: array
                   items:
-                    $ref: "#/components/schemas/User"
+                    $ref: 
+                      "#/components/schemas/User"
       # create
       post:
         summary: Create a new User
@@ -49,14 +180,16 @@ definition:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/User"
+                $ref: 
+                  "#components/schemas/User"
         responses:
           "201":
             description: User created
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/User"
+                  $ref: 
+                    "#components/schemas/User"
     /api/v1/users/{userId}:
       # retrieve
       get:
@@ -75,7 +208,8 @@ definition:
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/User"
+                  $ref: 
+                    "#components/schemas/User"
       # delete
       delete:
         summary: Delete a user by ID
@@ -124,6 +258,18 @@ definition:
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/User"
+                  $ref: 
+                    "#components/schemas/User"
+    /api/v1/categories:
+      get:
+        summary: Get all categories
+        responses:
+          "200":
+            description: List of categories
+            content:
+              application/json:
+                schema:
+                  $ref: 
+                    "#/components/schemas/Category"
 apis:
   - "./routes/*.js"

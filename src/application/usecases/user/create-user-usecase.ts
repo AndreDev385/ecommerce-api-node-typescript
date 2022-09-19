@@ -1,5 +1,5 @@
-import { CreateUser, ReadUser, ReadUserDTO } from "../../../domain/entity/user";
+import { CreateUserDTO, ReadUserDTO } from '../../../domain/dtos/user-dtos';
 
 export interface CreateUserUseCase {
-  execute(user: CreateUser): Promise<ReadUserDTO>;
+    execute(user: CreateUserDTO): Promise<ReadUserDTO>;
 }

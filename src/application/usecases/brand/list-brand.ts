@@ -1,5 +1,5 @@
-import { Brand, ReadBrandDTO } from "../../../domain/entity/brand";
+import { OutputBrandDto } from "../../../domain/dtos/brand-dtos";
 
 export interface ListBrandUseCase {
-  execute(): Promise<ReadBrandDTO[]>;
+  execute(): Promise<OutputBrandDto[]>;
 }

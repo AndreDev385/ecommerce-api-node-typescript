@@ -10,7 +10,7 @@ export class DeleteBrandImpl implements DeleteBrandUseCase {
     this.brandRepository = repository;
   }
 
-  async execute(id: number): Promise<void> {
+  async execute(id: string): Promise<void> {
     const brand = await this.brandRepository.findById(id);
     if (!brand) throw new NotFoundError("Brand");
     await this.brandRepository.delete(id);

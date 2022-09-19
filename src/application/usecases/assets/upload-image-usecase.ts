@@ -1,6 +1,5 @@
-
-import { Asset } from "../../../domain/entity/asset";
+import { ReadAssetDTO } from '../../../domain/dtos/asset-dtos';
 
 export interface UploadImageUseCase {
-  execute({userId, path}: {userId: number, path:String}): Promise<Asset>
+    execute({ userId, path }: { userId: string; path: String }): Promise<ReadAssetDTO>;
 }

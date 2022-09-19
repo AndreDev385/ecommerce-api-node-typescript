@@ -1,8 +1,9 @@
-import { Asset, CreateAsset, UpdateAsset } from "../../entity/asset";
+import { CreateAssetDTO, ReadAssetDTO, UpdateAssetDTO } from '../../dtos/asset-dtos';
+import { Asset } from '../../entity/asset';
 
 export interface AssetRepository {
-  create(asset: CreateAsset): Promise<Asset>
-  findAll(): Promise<Asset[]>;
-  findOne(id: number): Promise<Asset>
-  update(id: number, data: UpdateAsset): Promise<Asset>
+    create(asset: Asset): Promise<Asset>;
+    findAll(): Promise<Asset[]>;
+    findOne(id: string): Promise<Asset>;
+    update(asset: Asset): Promise<Asset>;
 }

@@ -1,3 +1,3 @@
 export interface DeleteCategoryUseCase {
-  execute(id: number): Promise<void>;
+    execute(id: string): Promise<void>;
 }

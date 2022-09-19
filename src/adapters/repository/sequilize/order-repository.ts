@@ -1,7 +1,7 @@
 import {
-  CreateOrder,
+  CreateOrderDTO,
   Order,
-  UpdateOrder,
+  UpdateOrderDTO,
   Status,
 } from "../../../domain/entity/order";
 import { OrderRepository } from "../../../domain/repository/interface/order-repository";
@@ -38,7 +38,7 @@ export class SequelizeOrderRepository implements OrderRepository {
     });
   }
 
-  async updateOrder(id: number, order: UpdateOrder): Promise<Order> {
+  async updateOrder(id: number, order: UpdateOrderDTO): Promise<Order> {
     return await this.orderDb.update(order, { where: { id } });
   }
 

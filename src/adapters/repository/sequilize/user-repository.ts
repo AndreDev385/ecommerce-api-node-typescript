@@ -1,4 +1,4 @@
-import { CreateUser, ReadUserDTO, User } from "../../../domain/entity/user";
+import { CreateUserDTO, ReadUserDTO, User } from "../../../domain/entity/user";
 import { NotFoundError } from "../../../domain/exceptions/exceptions";
 import { UserRepository } from "../../../domain/repository/interface/user-repository";
 import { OrderModel } from "../../orm/sequelize/models/order.model";
@@ -10,7 +10,7 @@ export class SequilizeUserRepository implements UserRepository {
     this.database = database;
   }
 
-  async create(user: CreateUser): Promise<User> {
+  async create(user: CreateUserDTO): Promise<User> {
     const result = await this.database.create(user);
     return result;
   }

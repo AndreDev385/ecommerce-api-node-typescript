@@ -1,7 +1,7 @@
-import { CreateProduct, Product, ReadProductDTO } from "../../../domain/entity/product";
+import { CreateProductDTO, Product, ReadProductDTO } from "../../../domain/entity/product";
 import { ProductRepository } from "../../../domain/repository/interface/product-repository";
 import { CreateProductUseCase } from "../../usecases/product/create-product-usecase";
-import { CreateProductDTO } from "../../utils/createDtos";
+import { CreateReadProductDTO } from "../../utils/createDtos";
 
 export class CreateProductImpl implements CreateProductUseCase {
   private productRepository: ProductRepository;
@@ -9,9 +9,9 @@ export class CreateProductImpl implements CreateProductUseCase {
     this.productRepository = repository;
   }
 
-  async execute(product: CreateProduct): Promise<ReadProductDTO> {
+  async execute(product: CreateProductDTO): Promise<ReadProductDTO> {
     Product.validateCreateProduct(product);
     const result = await this.productRepository.create(product);
-    return CreateProductDTO(result)
+    return CreateReadProductDTO(result)
   }
 }

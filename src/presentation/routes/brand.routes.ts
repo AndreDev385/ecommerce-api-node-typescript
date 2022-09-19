@@ -1,14 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import { BrandModel } from "../../adapters/orm/sequelize/models/brand.model";
 import { ProductModel } from "../../adapters/orm/sequelize/models/product.model";
-import { CreateBrandUseCase } from "../../application/usecases/brand/create-brand";
+import { SaveBrandUseCase } from "../../application/usecases/brand/save-brand";
 import { DeleteBrandUseCase } from "../../application/usecases/brand/delete-brand";
 import { FindOneBrandUseCase } from "../../application/usecases/brand/findone-brand";
 import { ListBrandUseCase } from "../../application/usecases/brand/list-brand";
 import { UpdateBrandUseCase } from "../../application/usecases/brand/update-brand";
 
 export default function brandRouter(
-  createBrand: CreateBrandUseCase,
+  createBrand: SaveBrandUseCase,
   listBrand: ListBrandUseCase,
   findOneBrand: FindOneBrandUseCase,
   updateBrand: UpdateBrandUseCase,
