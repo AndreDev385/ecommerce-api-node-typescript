@@ -1,27 +1,21 @@
 import { typeCheck } from 'type-check';
+import { v4 } from 'uuid';
 
 export class Asset {
-    private id: string | null;
+    private id: string;
     private originalUrl: string;
     private optimizedUrl: string | null;
 
     constructor(
         originalUrl: string,
-        id?: string | null,
         optimizedUrl?: string | null
     ) {
-        if (id) this.setId(id);
+        this.id = v4()
         this.setOriginalUrl(originalUrl);
         if (optimizedUrl) this.setOptimizedUrl(optimizedUrl);
     }
 
-    setId(id: string): void {
-        if (!this.id) {
-            this.id = id;
-        }
-    }
-
-    getId(): string | null {
+    getId(): string {
         return this.id;
     }
 

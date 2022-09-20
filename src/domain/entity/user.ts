@@ -9,12 +9,21 @@ import {
 } from '../schemas/user.schemas';
 
 export class User {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    phoneNumber: string;
+    private id: string;
+    private name: string;
+    private email: string;
+    private password: string;
+    private role: string;
+    private phoneNumber: string;
+
+    getId(): string {
+        return this.id
+    }
+
+    setName(str: string): void {
+        
+    }
+
 
     static async hashPassword(password: string) {
         const encrypt = await bcrypt.hash(password, 10);

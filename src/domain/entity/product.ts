@@ -1,9 +1,10 @@
 import { typeCheck } from 'type-check';
+import { v4 } from 'uuid';
 import { Asset } from './asset';
 import { Variation } from './variation';
 
 export class Product {
-    private id: string | null;
+    private id: string;
     private name: string;
     private brandId: string;
     private categoryId: string;
@@ -16,21 +17,22 @@ export class Product {
         name: string,
         brandId: string,
         categoryId: string,
-        id?: string | null,
-        description?: string | null,
+        description?: string,
         tags?: Array<string>,
+        asset?: Asset,
         variations?: Array<Variation>
     ) {
-        if (id) this.setId(id);
+        this.id = v4();
         this.setName(name);
-        this.setBrand(brandId);
-        this.setCategory(categoryId);
+        this.setBrandId(brandId);
+        this.setCategoryId(categoryId);
         if (description) this.setDescription(description);
         if (tags) {
             for (const tag of tags) {
                 this.addTags(tag);
             }
         }
+        if (asset) this.setAsset(asset);
         if (variations) {
             for (const variation of variations) {
                 this.addVariation(variation);
@@ -38,13 +40,7 @@ export class Product {
         }
     }
 
-    setId(id: string): void {
-        if (!this.id) {
-            this.id = id;
-        }
-    }
-
-    getId(): string | null {
+    getId(): string {
         return this.id;
     }
 
@@ -52,25 +48,26 @@ export class Product {
         if (!typeCheck('String', name)) {
             throw new Error('Name should be a string');
         }
+        this.name = name;
     }
 
     getName(): string {
         return this.name;
     }
 
-    setBrand(brand: string) {
+    setBrandId(brand: string) {
         this.brandId = brand;
     }
 
-    getBrand(): string {
+    getBrandId(): string {
         return this.brandId;
     }
 
-    setCategory(category: string): void {
+    setCategoryId(category: string): void {
         this.categoryId = category;
     }
 
-    getCategory(): string {
+    getCategoryId(): string {
         return this.categoryId;
     }
 
@@ -79,7 +76,7 @@ export class Product {
             throw new Error('Description should be a string');
         }
 
-        this.description = this.description;
+        this.description = str;
     }
 
     getDescription(): string | null {

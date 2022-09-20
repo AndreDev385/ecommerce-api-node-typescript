@@ -3,6 +3,7 @@ import { SaveBrandUseCaseImpl } from '../../../src/application/impl/brand/save-b
 import { BrandRepository } from '../../../src/domain/repository/interface/brand-repository';
 import { InputBrandDto, OutputBrandDto } from '../../../src/domain/dtos/brand-dtos';
 import { v4 } from 'uuid';
+import { create } from 'domain';
 
 describe('Test Create or Update Brand', () => {
     let brandRepository: BrandRepository;
@@ -65,12 +66,21 @@ describe('Test Create or Update Brand', () => {
                 Promise.resolve(null)
             );
 
+            let created = new Brand(name);
             jest.spyOn(brandRepository, 'create').mockImplementation(() =>
-                Promise.resolve(new Brand(name, id, null, null, []))
+                Promise.resolve(created)
             );
 
             const result = await saveBrandUseCase.execute({ name } as InputBrandDto);
-            expect(result).toEqual(new OutputBrandDto(id, name, null, [], null));
+            expect(result).toEqual(
+                new OutputBrandDto(
+                    created.getId(),
+                    created.getName(),
+                    created.getDescription(),
+                    created.getProducts(),
+                    created.getAsset()
+                )
+            );
         });
 
         test('Update succesfull', async () => {
@@ -78,11 +88,12 @@ describe('Test Create or Update Brand', () => {
             let name = 'Nike';
 
             jest.spyOn(brandRepository, 'findByName').mockImplementation(() =>
-                Promise.resolve(new Brand(name, id, null, null, []))
+                Promise.resolve(new Brand(name))
             );
 
+            let updated = new Brand('Adidas', 'Sport brand');
             jest.spyOn(brandRepository, 'update').mockImplementation(() =>
-                Promise.resolve(new Brand('Adidas', id, 'Sport brand', null, []))
+                Promise.resolve(updated)
             );
 
             const result = await saveBrandUseCase.execute({
@@ -91,7 +102,13 @@ describe('Test Create or Update Brand', () => {
                 description: 'Sport brand',
             } as InputBrandDto);
             expect(result).toEqual(
-                new OutputBrandDto(id, 'Adidas', 'Sport brand', [], null)
+                new OutputBrandDto(
+                    updated.getId(),
+                    updated.getName(),
+                    updated.getDescription(),
+                    updated.getProducts(),
+                    updated.getAsset()
+                )
             );
         });
     });

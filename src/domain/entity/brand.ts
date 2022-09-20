@@ -1,22 +1,17 @@
 import { Asset } from './asset';
 import { Product } from './product';
 import { typeCheck } from 'type-check';
+import { v4 } from 'uuid';
 
 export class Brand {
-    private id: string | null = null;
+    private id: string;
     private name: string;
-    private description: string | null = null;
-    private asset: Asset | null = null;
+    private description: string | null;
+    private asset: Asset | null;
     private products: Array<Product> = [];
 
-    constructor(
-        name: string | null,
-        id?: string | null,
-        description?: string | null,
-        asset?: Asset | null,
-        products?: Array<Product>
-    ) {
-        this.setId(id);
+    constructor(name: string, description?: string | null, asset?: Asset | null, products?: Array<Product>) {
+        this.id = v4();
         this.setName(name);
         if (description) this.setDescription(description);
         if (asset) this.setAsset(asset);
@@ -27,13 +22,7 @@ export class Brand {
         }
     }
 
-    setId(id: any): void {
-        if (!this.id) {
-            this.id = id;
-        }
-    }
-
-    getId(): string | null {
+    getId(): string {
         console.log(this.id);
         return this.id;
     }
@@ -42,7 +31,7 @@ export class Brand {
         return this.name;
     }
 
-    setName(name: string | null): void {
+    setName(name: string): void {
         if (!name) {
             throw new Error('Name is required');
         }

@@ -8,20 +8,18 @@ import { Product } from '../../../src/domain/entity/product';
 import { slugify } from '../../../src/domain/utils/slugify';
 
 describe('Test Category Domain Model', () => {
-    let id = uuid();
     let name = 'Men';
     let description = 'clothes for men';
     let tags = ['men', 'clothes for men', 'papa'];
-    let product = new Product('id', 'air', 'brandId', 'categoryId', '', [], []);
-    let asset = new Asset('url', id);
+    let asset = new Asset('url');
+    let product = new Product('air', 'brandId', 'categoryId', '', [], asset);
 
     test('Test constructor and getters', () => {
         //slug generation
         const spy = jest.spyOn(slugify, 'convert');
 
-        let category = new Category(name, id, description, tags, [product], asset);
+        let category = new Category(name, description, tags, [product], asset);
 
-        expect(category.getId()).toEqual(id);
         expect(category.getName()).toEqual(name);
         expect(category.getDescription()).toEqual(description);
         expect(category.getSlug()).toEqual('men');
@@ -37,25 +35,25 @@ describe('Test Category Domain Model', () => {
     describe('Test validators', () => {
         test('Name is not a string', () => {
             let number: any = 123;
-            expect(() => new Category(number, id, description)).toThrow(
+            expect(() => new Category(number, description)).toThrow(
                 Error('Name should be a string')
             );
         });
         test('Name is to short', () => {
             let toShortName: any = 'xs';
-            expect(() => new Category(toShortName, id, description)).toThrow(
+            expect(() => new Category(toShortName, description)).toThrow(
                 Error('Name should have at least 3 characters')
             );
         });
         test('Description is not a string', () => {
             let number: any = 12334;
-            expect(() => new Category(name, id, number)).toThrow(
+            expect(() => new Category(name, number)).toThrow(
                 Error('Description should be a string')
             );
         });
         test('Tags is not a string', () => {
             let numberTags: Array<any> = [12, 431];
-            expect(() => new Category(name, id, description, numberTags)).toThrow(
+            expect(() => new Category(name, description, numberTags)).toThrow(
                 Error('Tag should be a string')
             );
         });
@@ -63,16 +61,6 @@ describe('Test Category Domain Model', () => {
 
     describe('Test setters functions', () => {
         let category = new Category(name);
-        test('id setter', () => {
-            let id = uuid();
-            expect(category.getId()).toBeUndefined();
-            category.setId(id);
-
-            expect(category.getId()).toEqual(id);
-
-            category.setId(uuid());
-            expect(category.getId()).toEqual(id);
-        });
 
         test('name setter', () => {
             expect(category.getName()).toEqual(name);
@@ -91,9 +79,7 @@ describe('Test Category Domain Model', () => {
             expect(category.getSlug()).toEqual('men');
             category.setSlug('Men Category');
             expect(category.getSlug()).toEqual('men-category');
-            expect(() => category.setSlug(123 as any)).toThrow(
-                Error('Slug should be a string')
-            );
+            expect(() => category.setSlug(123 as any)).toThrow(Error('Slug should be a string'));
         });
     });
 });

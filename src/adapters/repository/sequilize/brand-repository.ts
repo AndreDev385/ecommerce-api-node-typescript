@@ -11,7 +11,7 @@ export class SequelizeBrandRepository implements BrandRepository {
         this.database = database;
     }
 
-    async findAll(): Promise<OutputBrandDto[]> {
+    async findAll(): Promise<Brand[]> {
         const result = await this.database.findAll({
             include: [ProductModel, AssetModel],
             where: { isActive: true },
@@ -19,20 +19,29 @@ export class SequelizeBrandRepository implements BrandRepository {
         return result;
     }
 
-    async create(brand: Brand): Promise<OutputBrandDto> {
-        const result = await this.database.create(brand);
+    async create(brand: Brand): Promise<Brand> {
+        await this.database.create(brand);
+        const result = await this.findByName(brand.getName());
+        console.log(result);
         return result;
     }
 
-    async findByName(name: string): Promise<OutputBrandDto> {
+    async findByName(name: string): Promise<Brand> {
         const result = await this.database.findOne({
             include: [ProductModel, AssetModel],
             where: { name, isActive: true },
         });
-        return result;
+        console.log(result);
+        return new Brand(
+            result.dataValues.name,
+            result.dataValues.id,
+            result.dataValues.description,
+            result.dataValues.asset,
+            result.dataValues.products
+        );
     }
 
-    async findById(id: string): Promise<OutputBrandDto> {
+    async findById(id: string): Promise<Brand> {
         const result = await this.database.findOne({
             include: [ProductModel, AssetModel],
             where: { id, isActive: true },
@@ -40,10 +49,11 @@ export class SequelizeBrandRepository implements BrandRepository {
         return result;
     }
 
-    async update(brand: Brand): Promise<OutputBrandDto> {
+    async update(brand: Brand): Promise<Brand> {
         const result = await this.database.update(brand, {
             where: { id: brand.getId() },
         });
+        console.log(result);
         return result;
     }
 

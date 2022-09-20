@@ -2,7 +2,7 @@ import { Asset } from '../entity/asset';
 import { Product } from '../entity/product';
 
 export interface InputBrandDto {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     asset: Asset;

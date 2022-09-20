@@ -10,9 +10,9 @@ export class SaveBrandUseCaseImpl implements SaveBrandUseCase {
     }
 
     async execute(input: InputBrandDto): Promise<OutputBrandDto> {
-        const brand = new Brand(input.name, input.id, input.description, input.asset);
+        const brand = new Brand(input.name, input.description, input.asset);
         let result: Brand;
-        if (brand.getId()) {
+        if (input.id) {
             result = await this.brandRepository.update(brand);
         } else {
             const existBrand = await this.brandRepository.findByName(brand.getName());

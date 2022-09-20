@@ -1,11 +1,12 @@
 import { typeCheck } from 'type-check';
+import { v4 } from 'uuid';
 import { slugify } from '../utils/slugify';
 
 import { Asset } from './asset';
 import { Product } from './product';
 
 export class Category {
-    private id: string | null;
+    private id: string
     private name: string;
     private slug: string;
     private description: string | null;
@@ -15,13 +16,12 @@ export class Category {
 
     constructor(
         name: string,
-        id?: string | null,
         description?: string | null,
         tags?: Array<string>,
         products?: Array<Product>,
         asset?: Asset | null
     ) {
-        if (id) this.setId(id);
+        this.id = v4()
         this.setName(name);
         if (description) this.setDescription(description);
         this.setSlug(this.name);
@@ -38,13 +38,7 @@ export class Category {
         if (asset) this.setAsset(asset);
     }
 
-    setId(id: string): void {
-        if (!this.id) {
-            this.id = id;
-        }
-    }
-
-    getId(): string | null {
+    getId(): string {
         return this.id;
     }
 
