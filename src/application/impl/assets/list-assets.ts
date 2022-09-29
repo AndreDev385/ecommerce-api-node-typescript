@@ -3,19 +3,19 @@ import { AssetRepository } from '../../../domain/repository/interface/asset-repo
 import { ListAssetsUseCase } from '../../usecases/assets/list-assets-usecase';
 
 export class ListAssetsImpl implements ListAssetsUseCase {
-    assetRepository: AssetRepository;
+  assetRepository: AssetRepository;
 
-    constructor(assetRepository: AssetRepository) {
-        this.assetRepository = assetRepository;
-    }
+  constructor (assetRepository: AssetRepository) {
+    this.assetRepository = assetRepository;
+  }
 
-    async execute(): Promise<ReadAssetDTO[]> {
-        const assets = await this.assetRepository.findAll();
-        const result = assets.map((a) => ({
-            id: a.getId() as string,
-            originalUrl: a.getOriginalUrl() as string,
-            optimizedUrl: a.getOptimizedUrl(),
-        }));
-        return result;
-    }
+  async execute (): Promise<ReadAssetDTO[]> {
+    const assets = await this.assetRepository.findAll();
+    const result = assets.map((a) => ({
+      id: a.getId() as string,
+      originalUrl: a.getOriginalUrl() as string,
+      optimizedUrl: a.getOptimizedUrl()
+    }));
+    return result;
+  }
 }

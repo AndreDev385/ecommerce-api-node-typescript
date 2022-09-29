@@ -12,7 +12,7 @@ export const createUserSchema = Joi.object({
   email: email.required(),
   password: password.required(),
   role: role.required(),
-  phoneNumber 
+  phoneNumber
 })
 
 export const updateRoleUserSchema = Joi.object({
@@ -23,5 +23,3 @@ export const credentialsSchema = Joi.object({
   email: email.required(),
   password: password.required()
 })
-
-

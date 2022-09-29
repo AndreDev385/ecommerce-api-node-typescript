@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi'
 
 const variarionId = Joi.number();
 const productId = Joi.number();
@@ -9,5 +9,5 @@ export const updateAsset = Joi.object({
   variarionId,
   productId,
   brandId,
-  categoryId,
-});
+  categoryId
+})

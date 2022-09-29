@@ -1,18 +1,19 @@
-import { CreateOrderDTO, Order, ReadOrderDTO } from "../../../domain/entity/order";
-import { Variation } from "../../../domain/entity/variation";
-import { NotFoundError } from "../../../domain/exceptions/exceptions";
-import { OrderRepository } from "../../../domain/repository/interface/order-repository";
-import { VariationRepository } from "../../../domain/repository/interface/variation-repository";
-import { CreateOrderUseCase } from "../../usecases/order/create-order-usecase";
-import { CreateReadOrderDTO } from "../../utils/createDtos";
+import { CreateOrderDTO, Order, ReadOrderDTO } from '../../../domain/entity/order'
+import { Variation } from '../../../domain/entity/variation'
+import { NotFoundError } from '../../../domain/exceptions/exceptions'
+import { OrderRepository } from '../../../domain/repository/interface/order-repository'
+import { VariationRepository } from '../../../domain/repository/interface/variation-repository'
+import { CreateOrderUseCase } from '../../usecases/order/create-order-usecase'
+import { CreateReadOrderDTO } from '../../utils/createDtos'
 
 export class CreateOrderImpl implements CreateOrderUseCase {
-  constructor(
-    private orderRepo: OrderRepository,
-    private variationRepo: VariationRepository
+  constructor (
+    private readonly orderRepo: OrderRepository,
+    private readonly variationRepo: VariationRepository
   ) {}
-  async execute(order: CreateOrderDTO): Promise<ReadOrderDTO | void> {
-    //Validate order data
+
+  async execute (order: CreateOrderDTO): Promise<ReadOrderDTO | void> {
+    // Validate order data
     Order.validateCreateOrder(order);
 
     // Crear la orden
@@ -24,16 +25,16 @@ export class CreateOrderImpl implements CreateOrderUseCase {
       console.log(id);
       const variation = await this.variationRepo.findOne(id);
       if (!variation) {
-        throw new NotFoundError("Variation");
+        throw new NotFoundError('Variation')
       }
       if (!variation.isAvaible) {
-        throw new Error("Product not avaible");
+        throw new Error('Product not avaible')
         return;
       }
       price += variation.normalPrice * quantity;
-      /*variation.Order_Variations = {
+      /* variation.Order_Variations = {
         quantity,
-      };*/
+      }; */
       await new_order.addVariation(variation, { through: { quantity } });
     }
 

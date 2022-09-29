@@ -1,48 +1,45 @@
-import {
-  CreateOrderDTO,
-  Order,
-  UpdateOrderDTO,
-  Status,
-} from "../../../domain/entity/order";
-import { OrderRepository } from "../../../domain/repository/interface/order-repository";
-import { SequelizeWrapper } from "./db-sequelize-wrapper";
-import { VariationModel } from "../../orm/sequelize/models/variation.model";
-import { UserModel } from "../../orm/sequelize/models/user.model";
+import { Order } from '../../../domain/entity/order';
+import { OrderRepository } from '../../../domain/repository/interface/order-repository';
+import { SequelizeWrapper } from './db-sequelize-wrapper';
+import { VariationModel } from '../../orm/sequelize/models/variation.model';
+import { UserModel } from '../../orm/sequelize/models/user.model';
 
 export class SequelizeOrderRepository implements OrderRepository {
-  constructor(
-    private orderDb: SequelizeWrapper,
-    //private variationDb: SequelizeWrapper
-  ) {}
-  async create(order: { userId: number; }): Promise<any> {
-    return await this.orderDb.create(order)
+  private static instance: OrderRepository;
+
+  constructor(private readonly database: SequelizeWrapper) {}
+
+  static getInstance(db: SequelizeWrapper) {
+    if (!SequelizeOrderRepository.instance) {
+      SequelizeOrderRepository.instance = new SequelizeOrderRepository(db);
+    }
+    return SequelizeOrderRepository.instance;
   }
 
-  async findAll(filters: object): Promise<Order[]> {
-
-    return await this.orderDb.findAll({
-      where: filters,
-      include: {
-        model: VariationModel,
-        through: {
-          attributes: [],
-        },
-      },
+  async create(order: Order) {
+    const result = await this.database.create(order.getData());
+    return new Order(result);
+  }
+  async findAll(filters: object) {
+    const result = await this.database.findAll({ where: filters });
+    return result.map((o) => new Order(o));
+  }
+  async findById(id: string) {
+    const result = await this.database.findOne({ where: { id } });
+    return new Order(result);
+  }
+  async updateOrder(order: Order) {
+    await this.database.update(order.getData(), {
+      where: { id: order.getData().id },
     });
-  }
-
-  async findById(id: number): Promise<Order> {
-    return await this.orderDb.findOne({
-      where: { id },
+    const result = await this.database.findOne({
+      where: { id: order.getData().id },
       include: [VariationModel],
     });
+    return new Order(result);
   }
 
-  async updateOrder(id: number, order: UpdateOrderDTO): Promise<Order> {
-    return await this.orderDb.update(order, { where: { id } });
-  }
-
-  async changeStatus(id: number, status: Status): Promise<void> {
-    return await this.orderDb.update({ status }, { where: { id } });
+  async changeStatus(id: string, status: string) {
+    await this.database.update({ status }, { where: { id } });
   }
 }

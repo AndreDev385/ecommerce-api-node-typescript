@@ -2,72 +2,82 @@ import { Asset } from './asset';
 import { Product } from './product';
 import { typeCheck } from 'type-check';
 import { v4 } from 'uuid';
+import { InputBrandDto } from '../dtos/brand-dtos';
+import { slugify } from '../utils/slugify';
 
 export class Brand {
-    private id: string;
-    private name: string;
-    private description: string | null;
-    private asset: Asset | null;
-    private products: Array<Product> = [];
+  private readonly id: string;
+  private name: string;
+  private slug: string;
+  private description: string | null;
+  private asset: Asset | null;
+  private readonly products: Product[] = [];
 
-    constructor(name: string, description?: string | null, asset?: Asset | null, products?: Array<Product>) {
-        this.id = v4();
-        this.setName(name);
-        if (description) this.setDescription(description);
-        if (asset) this.setAsset(asset);
-        if (products) {
-            for (const product of products) {
-                this.addProduct(product);
-            }
-        }
+  constructor ({ id, name, description, asset, products }: InputBrandDto) {
+    console.log(name, description, asset, products, 'Data');
+    this.id = id;
+    this.setName(name);
+    this.setSlug(name);
+    this.setDescription(description);
+    this.setAsset(asset);
+    if (products) {
+      for (const product of products) {
+        this.addProduct(product);
+      }
     }
+  }
 
-    getId(): string {
-        console.log(this.id);
-        return this.id;
+  setName (name: string): void {
+    if (!name) {
+      throw new Error('Name is required');
     }
+    if (!typeCheck('String', name)) {
+      throw new Error('Name should be a string');
+    }
+    if (name.length < 4) {
+      throw new Error('Name should have at least 4 characters');
+    }
+    this.name = name;
+  }
 
-    getName(): string {
-        return this.name;
+  setSlug (slug: string): void {
+    if (!typeCheck('String', slug)) {
+      throw new Error('Slug should be a string');
     }
+    this.slug = slugify.convert(slug);
+  }
 
-    setName(name: string): void {
-        if (!name) {
-            throw new Error('Name is required');
-        }
-        if (!typeCheck('String', name)) {
-            throw new Error('Name should be a string');
-        }
-        if (name.length < 4) {
-            throw new Error('Name should have at least 4 characters');
-        }
-        this.name = name;
+  setDescription (description: string): void {
+    if (!description) {
+      this.description = null;
+      return
     }
+    if (!typeCheck('String', description)) {
+      throw new Error('Description should be a string');
+    }
+    this.description = description;
+  }
 
-    getDescription(): string | null {
-        return this.description;
+  setAsset (asset: Asset): void {
+    if (!asset) {
+      this.asset = null;
+      return
     }
+    this.asset = asset;
+  }
 
-    setDescription(description: string): void {
-        if (!typeCheck('String', description)) {
-            throw new Error('Description should be a string');
-        }
-        this.description = description;
-    }
+  addProduct (product: Product): void {
+    this.products.push(product);
+  }
 
-    getAsset(): Asset | null {
-        return this.asset;
-    }
-
-    setAsset(asset: Asset): void {
-        this.asset = asset;
-    }
-
-    getProducts(): Array<Product> {
-        return this.products;
-    }
-
-    addProduct(product: Product): void {
-        this.products.push(product);
-    }
+  getData () {
+    return {
+      id: this.id,
+      name: this.name,
+      slug: this.slug,
+      description: this.description,
+      asset: this.asset,
+      products: this.products
+    };
+  }
 }

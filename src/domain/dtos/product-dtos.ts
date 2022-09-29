@@ -1,49 +1,54 @@
+import { Asset } from '../entity/asset';
 import { Brand } from '../entity/brand';
-import { ReadVariationDTO } from '../entity/variation';
-import { ReadAssetDTO } from './asset-dtos';
+import { Variation } from '../entity/variation';
+import { InputAssetDto, ReadAssetDTO } from './asset-dtos';
+import { InputVariationDto } from './variation-dtos';
 
-export interface CreateProductDTO {
-    name: string;
-    brandId: number;
-    categoryId: number;
-    description?: string;
-    tags?: string[];
+export interface InputProductDto {
+  id: string
+  name: string
+  brandId: string
+  categoryId: string
+  description: string
+  asset: Asset
+  tags: string[]
+  variations: Variation[]
 }
 
 export interface UpdateProductDTO {
-    name?: string;
-    brand?: Brand;
-    description?: string;
-    tags?: string[];
+  name?: string
+  brand?: Brand
+  description?: string
+  tags?: string[]
 }
 
 export class ReadProductDTO {
-    id: number;
-    name: string;
-    brandId: number;
-    categoryId: number;
-    description: string;
-    tags: string[];
-    asset: ReadAssetDTO | null;
-    variations: ReadVariationDTO[];
+  id: string;
+  name: string;
+  brandId: string;
+  categoryId: string;
+  description: string | null;
+  tags: string[];
+  asset: Asset | null;
+  variations: Variation[];
 
-    constructor(
-        id: number,
-        name: string,
-        brandId: number,
-        categoryId: number,
-        description: string,
-        tags: string[],
-        asset: ReadAssetDTO | null,
-        variations: ReadVariationDTO[]
-    ) {
-        this.id = id;
-        this.name = name;
-        this.brandId = brandId;
-        this.categoryId = categoryId;
-        this.description = description;
-        this.tags = tags;
-        this.asset = asset;
-        this.variations = variations;
-    }
+  constructor (
+    id: string,
+    name: string,
+    brandId: string,
+    categoryId: string,
+    description: string,
+    tags: string[],
+    asset: Asset | null,
+    variations: Variation[]
+  ) {
+    this.id = id;
+    this.name = name;
+    this.brandId = brandId;
+    this.categoryId = categoryId;
+    this.description = description;
+    this.tags = tags;
+    this.asset = asset;
+    this.variations = variations;
+  }
 }

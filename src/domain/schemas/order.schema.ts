@@ -1,9 +1,9 @@
-import Joi from "joi";
+import Joi from 'joi'
 
 const variations = Joi.array().items(
   Joi.object({
     id: Joi.number().required(),
-    quantity: Joi.number().required(),
+    quantity: Joi.number().required()
   })
 );
 const status = Joi.string()
@@ -14,13 +14,13 @@ const userId = Joi.number();
 
 export const createOrderSchema = Joi.object({
   variations: variations.required(),
-  userId: userId.required(),
-});
+  userId: userId.required()
+})
 
 export const updateOrderSchema = Joi.object({
   userId,
   variations,
-  status,
-});
+  status
+})
 
 export const updateOrderStatusSchema = status;

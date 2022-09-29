@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi'
 
 const id = Joi.number();
 const name = Joi.string().min(3);
@@ -10,12 +10,12 @@ export const createCategorySchema = Joi.object({
   name: name.required(),
   slug: slug.required(),
   description,
-  tags,
-});
+  tags
+})
 
 export const updateCategorySchema = Joi.object({
   name,
   slug,
   description,
-  tags,
-});
+  tags
+})

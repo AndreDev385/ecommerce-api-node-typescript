@@ -1,3 +1,3 @@
 export interface Uploader {
-  upload(path: string): Promise<string>;
+  upload: (path: string) => Promise<string>
 }

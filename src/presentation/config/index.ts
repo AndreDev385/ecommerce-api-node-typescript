@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv'
 
 dotenv.config();
 
@@ -20,5 +20,6 @@ export const config = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.API_KEY,
   CLOUDINARY_SECRET_KEY: process.env.SECRET_KEY,
-  MONGO: process.env.MONGO
+  MONGO: process.env.MONGO,
+  APPLICATION_NAME: process.env.APPLICATION_NAME
 };

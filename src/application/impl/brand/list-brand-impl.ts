@@ -3,22 +3,22 @@ import { ListBrandUseCase } from '../../usecases/brand/list-brand';
 import { OutputBrandDto } from '../../../domain/dtos/brand-dtos';
 
 export class ListBrandImpl implements ListBrandUseCase {
-    private brandRepository: BrandRepository;
-    constructor(repository: BrandRepository) {
-        this.brandRepository = repository;
-    }
+  private static instance: ListBrandUseCase;
+  private readonly brandRepository: BrandRepository;
 
-    async execute(): Promise<OutputBrandDto[]> {
-        const result = await this.brandRepository.findAll();
-        return result.map(
-            (brand) =>
-                new OutputBrandDto(
-                    brand.getId() as string,
-                    brand.getName(),
-                    brand.getDescription() as string,
-                    brand.getProducts(),
-                    brand.getAsset()
-                )
-        );
+  constructor (repository: BrandRepository) {
+    this.brandRepository = repository;
+  }
+
+  public static getInstance (repo: BrandRepository) {
+    if (!ListBrandImpl.instance) {
+      ListBrandImpl.instance = new ListBrandImpl(repo);
     }
+    return ListBrandImpl.instance;
+  }
+
+  async execute (): Promise<OutputBrandDto[]> {
+    const result = await this.brandRepository.findAll();
+    return result.map((b) => b.getData());
+  }
 }

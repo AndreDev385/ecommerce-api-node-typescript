@@ -1,23 +1,22 @@
-import sequelize from "../config";
-import { DataTypes } from "sequelize";
-import { VariationModel } from "./variation.model";
-import { BrandModel } from "./brand.model";
-import { CategoryModel } from "./category.model";
-import { AssetModel } from "./asset.model";
+import sequelize from '../config';
+import { DataTypes } from 'sequelize';
+import { VariationModel } from './variation.model';
+import { BrandModel } from './brand.model';
+import { CategoryModel } from './category.model';
+import { AssetModel } from './asset.model';
 
 export const ProductModel = sequelize.define(
-  "product",
+  'product',
   {
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      type: DataTypes.STRING,
+      primaryKey: true
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
-    /*brandId: {
+    /* brandId: {
       type: DataTypes.INTEGER,
       references: {
         model: BrandModel,
@@ -32,41 +31,34 @@ export const ProductModel = sequelize.define(
         key: "categoryId",
       },
       allowNull: false,
-    },*/
+    }, */
     description: {
       type: DataTypes.STRING,
-      defaultValue: "",
+      defaultValue: null
     },
     tags: {
       type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-  },
-  {
-    timestamps: true,
+      defaultValue: []
+    }
   }
-);
+)
 
 ProductModel.hasMany(VariationModel, {
-  foreignKey: "productId",
-  sourceKey: "id",
-});
+  foreignKey: 'productId',
+  sourceKey: 'id'
+})
 
 VariationModel.belongsTo(ProductModel, {
-  foreignKey: "productId",
-  targetKey: "id",
-});
+  foreignKey: 'productId',
+  targetKey: 'id'
+})
 
 ProductModel.hasOne(AssetModel, {
-  foreignKey: "productId",
-  sourceKey: "id",
-});
+  foreignKey: 'productId',
+  sourceKey: 'id'
+})
 
 AssetModel.belongsTo(ProductModel, {
-  foreignKey: "productId",
-  targetKey: "id",
-});
+  foreignKey: 'productId',
+  targetKey: 'id'
+})

@@ -1,62 +1,49 @@
-import sequelize from "../config";
-import { DataTypes } from "sequelize";
-import { AssetModel } from "./asset.model";
-import { ProductModel } from "./product.model";
+import sequelize from '../config';
+import { DataTypes } from 'sequelize';
+import { AssetModel } from './asset.model';
+import { ProductModel } from './product.model';
 
-//export class BrandModel extends Model {}
+// export class BrandModel extends Model {}
 
 export const BrandModel = sequelize.define(
-  "brand",
+  'brand',
   {
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
+    },
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     description: {
       type: DataTypes.STRING,
-      defaultValue: "",
-    },
-    /*image: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: AssetModel,
-        key: "id",
-      },
-      defaultValue: null,
-    },*/
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-  },
-  {
-    //sequelize,
-    timestamps: true,
-    modelName: "brand",
+      defaultValue: null
+    }
   }
-);
+)
 
 BrandModel.hasMany(ProductModel, {
-  foreignKey: "brandId",
-  sourceKey: "id",
-});
+  foreignKey: 'brandId',
+  sourceKey: 'id'
+})
 
 ProductModel.belongsTo(BrandModel, {
-  foreignKey: "brandId",
-  targetKey: "id",
-});
+  foreignKey: 'brandId',
+  targetKey: 'id'
+})
 
 BrandModel.hasOne(AssetModel, {
-  foreignKey: "brandId",
-  sourceKey: "id",
-});
+  foreignKey: 'brandId',
+  sourceKey: 'id'
+})
 
 AssetModel.belongsTo(BrandModel, {
-  foreignKey: "brandId",
-  targetKey: "id",
-});
+  foreignKey: 'brandId',
+  targetKey: 'id'
+})

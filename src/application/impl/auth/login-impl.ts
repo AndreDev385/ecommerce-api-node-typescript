@@ -7,48 +7,48 @@ import { TokenRepository } from '../../../domain/repository/interface/token-repo
 import { NotFoundError } from '../../../domain/exceptions/exceptions';
 
 export class LoginImpl implements LoginUseCase {
-    userRepository: UserRepository;
-    tokenRepository: TokenRepository;
-    generateAccessToken: GenerateAccessTokenUseCase;
-    generateRefreshToken: GenerateRefreshTokenUseCase;
+  userRepository: UserRepository;
+  tokenRepository: TokenRepository;
+  generateAccessToken: GenerateAccessTokenUseCase;
+  generateRefreshToken: GenerateRefreshTokenUseCase;
 
-    constructor(
-        userRepo: UserRepository,
-        tokenRepo: TokenRepository,
-        generateAccessToken: GenerateAccessTokenUseCase,
-        generateRefreshToken: GenerateRefreshTokenUseCase
-    ) {
-        this.userRepository = userRepo;
-        this.tokenRepository = tokenRepo;
-        this.generateAccessToken = generateAccessToken;
-        this.generateRefreshToken = generateRefreshToken;
+  constructor (
+    userRepo: UserRepository,
+    tokenRepo: TokenRepository,
+    generateAccessToken: GenerateAccessTokenUseCase,
+    generateRefreshToken: GenerateRefreshTokenUseCase
+  ) {
+    this.userRepository = userRepo;
+    this.tokenRepository = tokenRepo;
+    this.generateAccessToken = generateAccessToken;
+    this.generateRefreshToken = generateRefreshToken;
+  }
+
+  async execute (credentials: Credentials): Promise<Jwt> {
+    // User.validateCredentials(credentials);
+    const user = await this.userRepository.findByEmail(credentials.email);
+    if (!user) throw new NotFoundError('User');
+
+    // await User.validatePassword(credentials.password, user.password);
+
+    const token = this.generateAccessToken.execute(user.id, user.role);
+    const refreshToken = this.generateRefreshToken.execute(user.id, user.role);
+
+    const existToken = await this.tokenRepository.findByUserId(user.id);
+
+    if (existToken) {
+      await this.tokenRepository.updateToken(user.id, refreshToken);
+    } else {
+      await this.tokenRepository.create({
+        token: refreshToken,
+        userId: user.id,
+        email: user.email
+      })
     }
 
-    async execute(credentials: Credentials): Promise<Jwt> {
-        //User.validateCredentials(credentials);
-        const user = await this.userRepository.findByEmail(credentials.email);
-        if (!user) throw new NotFoundError('User');
-
-        //await User.validatePassword(credentials.password, user.password);
-
-        const token = this.generateAccessToken.execute(user.id, user.role);
-        const refreshToken = this.generateRefreshToken.execute(user.id, user.role);
-
-        const existToken = await this.tokenRepository.findByUserId(user.id);
-
-        if (existToken) {
-            await this.tokenRepository.updateToken(user.id, refreshToken);
-        } else {
-            await this.tokenRepository.create({
-                token: refreshToken,
-                userId: user.id,
-                email: user.email,
-            });
-        }
-
-        return {
-            token,
-            refreshToken,
-        };
-    }
+    return {
+      token,
+      refreshToken
+    };
+  }
 }

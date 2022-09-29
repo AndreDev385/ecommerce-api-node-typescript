@@ -1,17 +1,17 @@
-import { Sequelize } from "sequelize";
-import { config } from "../../../presentation/config";
+import { Sequelize } from 'sequelize'
+import { config } from '../../../presentation/config'
 
 const sequelize = new Sequelize(
   config.DB_NAME as string,
   config.DB_USER as string,
   config.DB_PASSWORD,
   {
-    host: "db",
-    dialect: "postgres",
+    host: 'db',
+    dialect: 'postgres'
   }
 );
 
-/*const sequelize = new Sequelize({
+/* const sequelize = new Sequelize({
   dialect: "postgres",
   host: "db",
   username: config.DB_USER,
@@ -20,6 +20,6 @@ const sequelize = new Sequelize(
   logging: false,
   //models: [__dirname + "/models/*model.ts"]
 });
-console.log(__dirname)*/
+console.log(__dirname) */
 
-export default sequelize
+export default sequelize;

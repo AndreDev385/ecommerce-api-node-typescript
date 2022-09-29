@@ -1,6 +1,6 @@
-import sequelize from "../config";
-import { DataTypes, Model } from "sequelize";
-import { UserModel } from "./user.model";
+import sequelize from '../config'
+import { DataTypes, Model } from 'sequelize'
+import { UserModel } from './user.model'
 
 export class AssetModel extends Model {}
 
@@ -9,31 +9,30 @@ AssetModel.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
-    /*owner: {
+    /* owner: {
       type: DataTypes.INTEGER,
       references: {
         model: UserModel,
         key: "id",
       },
-    },*/
+    }, */
     originalUrl: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     optimizedUrl: {
       type: DataTypes.STRING,
-      defaultValue: null,
+      defaultValue: null
     },
     isActive: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+      defaultValue: true
+    }
   },
   {
     sequelize,
-    timestamps: true,
-    modelName: "asset",
+    modelName: 'asset'
   }
 );

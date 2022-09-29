@@ -1,3 +1,3 @@
 export interface IsValidRefreshTokenUseCase {
-  execute(token: string): void
+  execute: (token: string) => void
 }

@@ -1,14 +1,14 @@
-import express, { NextFunction, Request, Response } from "express";
-import { LoginUseCase } from "../../application/usecases/auth/login-usecase";
-import { RefreshTokenUseCase } from "../../application/usecases/auth/refresh-token-usecase";
+import express, { NextFunction, Request, Response } from 'express'
+import { LoginUseCase } from '../../application/usecases/auth/login-usecase'
+import { RefreshTokenUseCase } from '../../application/usecases/auth/refresh-token-usecase'
 
-export default function authRouter(
+export default function authRouter (
   login: LoginUseCase,
   refreshToken: RefreshTokenUseCase
 ) {
   const router = express.Router();
 
-  router.post("/login", async (req: Request, res: Response, next: NextFunction) => {
+  router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { body } = req;
 
@@ -16,25 +16,25 @@ export default function authRouter(
 
       res.status(200).json({
         data: token,
-        message: "Login successfull",
+        message: 'Login successfull'
       });
     } catch (err: any) {
       next(err)
     }
   });
 
-  router.get("/refresh-token", async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/refresh-token', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers["x-auth-token"];
+      const token = req.headers['x-auth-token']
       if (!token) {
-        throw new Error("Unauthorized");
+        throw new Error('Unauthorized')
       }
 
       const accessToken = refreshToken.execute(token as string);
 
       res.status(200).json({
         data: accessToken,
-        message: "Access token has ben refreshed",
+        message: 'Access token has ben refreshed'
       });
     } catch (err: any) {
       next(err)

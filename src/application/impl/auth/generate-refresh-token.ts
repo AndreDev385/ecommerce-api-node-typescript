@@ -4,16 +4,16 @@ import { config } from '../../../presentation/config';
 import { GenerateRefreshTokenUseCase } from '../../usecases/auth/generate-refresh-token-usecase';
 
 export class GenerateAndSignRefreshTokenImpl implements GenerateRefreshTokenUseCase {
-    execute(userId: string, role: string): string {
-        const payload = {
-            userId,
-            role,
-        };
+  execute (userId: string, role: string): string {
+    const payload = {
+      userId,
+      role
+    };
 
-        const token = jwt.sign(payload, config.REFRESH_SECRET_KEY as jwt.Secret, {
-            expiresIn: config.JWT_REFRESH_EXPIRATION,
-        });
+    const token = jwt.sign(payload, config.REFRESH_SECRET_KEY as jwt.Secret, {
+      expiresIn: config.JWT_REFRESH_EXPIRATION
+    })
 
-        return token;
-    }
+    return token;
+  }
 }

@@ -1,28 +1,30 @@
 import { Asset } from '../../../src/domain/entity/asset';
 
 describe('Test Asset Domain Model', () => {
-    let url = 'url';
-    let optimizedUrl = 'optimizedUrl';
-    test('Test constructor and getters', () => {
-        let asset = new Asset(url, optimizedUrl);
-        expect(asset.getOriginalUrl()).toEqual(url);
-        expect(asset.getOptimizedUrl()).toEqual(optimizedUrl);
-    });
+  const url = 'url'
+  const optimizedUrl = 'optimizedUrl'
+  test('Test constructor and getters', () => {
+    const asset = new Asset(url, optimizedUrl)
+    expect(asset.getData().optimizedUrl).toEqual(optimizedUrl);
+    expect(asset.getData().originalUrl).toEqual(url);
+  })
 
-    test('Validations', () => {
-        let number: any = 123;
-        expect(() => new Asset(number)).toThrow(Error('Url should be a string'));
-        expect(() => new Asset(url, number)).toThrow(Error('Url should be a string'));
-    });
+  test('Validations', () => {
+    const number: any = 123
+    expect(() => new Asset(number)).toThrow(Error('Url should be a string'));
+    expect(() => new Asset(url, number)).toThrow(Error('Url should be a string'));
+  })
 
-    test('setters', () => {
-        let asset = new Asset(url);
-        let newUrl = 'asdfasdf';
+  test('setters', () => {
+    const asset = new Asset(url)
+    const newUrl = 'asdfasdf'
 
-        asset.setOriginalUrl(newUrl);
-        expect(asset.getOriginalUrl()).toEqual(newUrl);
+    asset.setOriginalUrl(newUrl);
+    expect(asset.getData().originalUrl).toEqual(newUrl);
 
-        asset.setOptimizedUrl(optimizedUrl);
-        expect(asset.getOptimizedUrl()).toEqual(optimizedUrl);
-    });
+    expect(asset.getData().optimizedUrl).toBeNull();
+
+    asset.setOptimizedUrl(optimizedUrl);
+    expect(asset.getData().optimizedUrl).toEqual(optimizedUrl);
+  })
 });

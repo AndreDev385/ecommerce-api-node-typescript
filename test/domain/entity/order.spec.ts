@@ -4,87 +4,87 @@ import { Order, OrderItem } from '../../../src/domain/entity/order';
 import { Variation } from '../../../src/domain/entity/variation';
 
 describe('Test Order and OrderItem Domain Models', () => {
-    let id = v4();
-    let price = 14.99;
-    let attributes = [
-        { name: 'color', value: 'Black' },
-        { name: 'size', value: '40' },
-    ];
-    let stock = 10;
-    let asset = new Asset('url');
-    let variation = new Variation(id, price, attributes, stock, [asset]);
+  const id = v4()
+  const price = 14.99
+  const attributes = [
+    { name: 'color', value: 'Black' },
+    { name: 'size', value: '40' }
+  ]
+  const stock = 10
+  const asset = new Asset('url')
+  const variation = new Variation(id, price, attributes, stock, [asset])
 
-    let name: any = 'Air zoom';
-    let quantity = 2;
-    let status = 'waiting';
+  const name: any = 'Air zoom'
+  const quantity = 2
+  const status = 'waiting'
 
-    describe('Test functions', () => {
-        let item = new OrderItem(variation, name, quantity);
-        let order = new Order(id, status);
-        test('Test OrderItem getters', () => {
-            expect(item.getName()).toEqual(name);
-            expect(item.getPrice()).toEqual(variation.getPrice());
-            expect(item.getQuantity()).toEqual(quantity);
-            expect(item.getTotal()).toEqual(variation.getPrice() * item.getQuantity());
-        });
+  describe('Test functions', () => {
+    const item = new OrderItem(variation, name, quantity)
+    const order = new Order(id, status)
+    test('Test OrderItem getters', () => {
+      expect(item.getData().name).toEqual(name);
+      expect(item.getData().variation.getData().price).toEqual(variation.getData().price);
+      expect(item.getData().quantity).toEqual(quantity);
+      expect(item.getTotal()).toEqual(variation.getData().price * item.getData().quantity);
+    })
 
-        test('Test Order getters', () => {
-            expect(order.getUserId()).toEqual(id);
-            expect(order.getItems()).toEqual([]);
-            expect(order.getStatus()).toEqual(status);
-            expect(order.getTotalPrice()).toBe(0);
-        });
+    test('Test Order getters', () => {
+      expect(order.getData().userId).toEqual(id);
+      expect(order.getData().items).toEqual([]);
+      expect(order.getData().status).toEqual(status);
+      expect(order.getTotalPrice()).toBe(0);
+    })
 
-        test('Test orderItem setters', () => {
-            let newName = 'Pegasus';
-            let newQuantity = 12;
+    test('Test orderItem setters', () => {
+      const newName = 'Pegasus'
+      const newQuantity = 12
 
-            item.setName(newName);
-            expect(item.getName()).toEqual(newName);
+      item.setName(newName);
+      expect(item.getData().name).toEqual(newName);
 
-            item.setQuantity(newQuantity);
-            expect(item.getQuantity()).toEqual(newQuantity);
-        });
+      item.setQuantity(newQuantity);
+      expect(item.getData().quantity).toEqual(newQuantity);
+    })
 
-        test('Test order setters', () => {
-            let newStatus = 'completed';
-            let newId = v4();
-            let newItem = new OrderItem(variation, name, 3);
+    test('Test order setters', () => {
+      const newStatus = 'completed'
+      const newId = v4()
+      const newItem = new OrderItem(variation, name, 3)
 
-            order.setStatus(newStatus);
-            expect(order.getStatus()).toEqual(newStatus);
+      order.setStatus(newStatus);
+      expect(order.getData().status).toEqual(newStatus);
 
-            order.setUserId(newId);
-            expect(order.getUserId()).toEqual(newId);
+      order.setUserId(newId);
+      expect(order.getData().userId).toEqual(newId);
 
-            order.addItem(item);
-            expect(order.getItems()).toEqual([item]);
+      order.addItem(item);
+      expect(order.getData().items).toEqual([item]);
 
-            expect(order.getTotalPrice()).toEqual(item.getTotal());
+      expect(order.getTotalPrice()).toEqual(item.getTotal());
 
-            order.addItem(newItem);
-            expect(order.getItems()).toEqual([item, newItem]);
-            expect(order.getTotalPrice()).toEqual(item.getTotal() + newItem.getTotal());
-        });
+      order.addItem(newItem);
+      expect(order.getData().items).toEqual([item, newItem]);
+      expect(order.getTotalPrice()).toEqual(item.getTotal() + newItem.getTotal());
+    })
+  });
+
+  describe('Test validations', () => {
+    const number: any = 123
+    test('Test Order Item validations', () => {
+      expect(() => new OrderItem(variation, number, quantity)).toThrow(
+        Error('Name should be a string')
+      )
+      expect(() => new OrderItem(variation, name, name)).toThrow(
+        Error('Quantity should be a number')
+      )
+      expect(() => new OrderItem(variation, name, 0)).toThrow(
+        Error('Quantity should be 1 or greater')
+      )
     });
 
-    describe('Test validations', () => {
-        let number: any = 123;
-        test('Test Order Item validations', () => {
-            expect(() => new OrderItem(variation, number, quantity)).toThrow(
-                Error('Name should be a string')
-            );
-            expect(() => new OrderItem(variation, name, name)).toThrow(
-                Error('Quantity should be a number')
-            );
-            expect(() => new OrderItem(variation, name, 0)).toThrow(
-                Error('Quantity should be 1 or greater')
-            );
-        });
-
-        test('Test Order validations', () => {
-            expect(() => new Order(id, number)).toThrow(Error('Status should be a string'));
-            expect(() => new Order(id, 'in progress' as any)).toThrow(Error('Invalid status'));
-        });
-    });
-});
+    test('Test Order validations', () => {
+      expect(() => new Order(id, number)).toThrow(Error('Status should be a string'));
+      expect(() => new Order(id, 'in progress' as any)).toThrow(Error('Invalid status'));
+    })
+  });
+})

@@ -7,66 +7,74 @@ import { Product } from '../../../src/domain/entity/product';
 import { Variation } from '../../../src/domain/entity/variation';
 
 describe('Test Produc Domain Model', () => {
-    let name = 'Air';
-    let brand = new Brand('Nike');
-    let category = new Category('Men');
-    let description = 'shoes for runners';
-    let asset = new Asset('url');
+  const name = 'Air'
+  const brand = new Brand('Nike')
+  const category = new Category('Men')
+  const description = 'shoes for runners'
+  const asset = new Asset('url')
 
-    describe('test validation data', () => {
-        test('It should return error', () => {
-            let wrongName: any = 123;
-            expect(() => new Product(wrongName, brand.getId(), category.getId())).toThrow(
-                Error('Name should be a string')
-            );
+  describe('test validation data', () => {
+    test('It should return error', () => {
+      const wrongName: any = 123
+      expect(() => new Product(wrongName, brand.getData().id, category.getData().id)).toThrow(
+        Error('Name should be a string')
+      )
 
-            expect(() => new Product(name, brand.getId(), category.getId(), wrongName)).toThrow(
-                Error('Description should be a string')
-            );
+      expect(
+        () => new Product(name, brand.getData().id, category.getData().id, wrongName)
+      ).toThrow(Error('Description should be a string'));
 
-            expect(
-                () =>
-                    new Product(
-                        name,
-                        brand.getId() as string,
-                        category.getId() as string,
-                        description,
-                        [wrongName]
-                    )
-            ).toThrow(Error('Tag should be a string'));
-        });
-    });
+      expect(
+        () =>
+          new Product(name, brand.getData().id, category.getData().id, description, [
+            wrongName
+          ])
+      ).toThrow(Error('Tag should be a string'));
+    })
+  });
 
-    test('test constructor and getters', () => {
-        let product = new Product(
-            name,
-            brand.getId(),
-            category.getId(),
-            description,
-            ['shoes'],
-            asset,
-            []
-        );
-        let variations = new Variation(
-            product.getId(),
-            10,
-            [
-                { name: 'color', value: 'black' },
-                { name: 'size', value: '49' },
-            ],
-            10,
-            [],
-            12
-        );
+  test('test constructor and getters', () => {
+    const product = new Product(name, brand.getData().id, category.getData().id)
+    const variations = new Variation(
+      product.getData().id,
+      10,
+      [
+        { name: 'color', value: 'black' },
+        { name: 'size', value: '49' }
+      ],
+      10,
+      [],
+      12
+    );
 
-        product.addVariation(variations);
+    const product2 = new Product(
+      name,
+      brand.getData().id,
+      category.getData().id,
+      description,
+      ['shoes'],
+      asset,
+      [variations]
+    );
+    expect(product2.getData().variations).toEqual([variations]);
 
-        expect(product.getName()).toEqual(name);
-        expect(product.getCategoryId()).toEqual(category.getId());
-        expect(product.getBrandId()).toEqual(brand.getId());
-        expect(product.getDescription()).toEqual(description);
-        expect(product.getTags()).toEqual(['shoes']);
-        expect(product.getAsset()).toEqual(asset);
-        expect(product.getVariations()).toEqual([variations]);
-    });
+    product.addVariation(variations);
+
+    expect(product.getData().description).toBeNull();
+    expect(product.getData().asset).toBeNull();
+
+    expect(product.getData().name).toEqual(name);
+    expect(product.getData().categoryId).toEqual(category.getData().id);
+    expect(product.getData().brandId).toEqual(brand.getData().id);
+
+    product.setDescription(description);
+    expect(product.getData().description).toEqual(description);
+
+    product.setAsset(asset);
+    expect(product.getData().asset).toEqual(asset);
+
+    product.addTags('shoes');
+    expect(product.getData().tags).toEqual(['shoes']);
+    expect(product.getData().variations).toEqual([variations]);
+  })
 });

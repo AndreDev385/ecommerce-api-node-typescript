@@ -1,5 +1,3 @@
-import { Brand } from "../../../domain/entity/brand";
-
 export interface DeleteBrandUseCase {
-  execute(id: string): Promise<void>;
+  execute: (id: string) => Promise<void>
 }

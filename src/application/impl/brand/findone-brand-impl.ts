@@ -4,20 +4,23 @@ import { BrandRepository } from '../../../domain/repository/interface/brand-repo
 import { FindOneBrandUseCase } from '../../usecases/brand/findone-brand';
 
 export class FindOneBrandImpl implements FindOneBrandUseCase {
-    private brandRepository: BrandRepository;
-    constructor(repository: BrandRepository) {
-        this.brandRepository = repository;
-    }
+  private static instance: FindOneBrandUseCase;
+  private readonly brandRepository: BrandRepository;
 
-    async execute(id: string): Promise<OutputBrandDto> {
-        const result = await this.brandRepository.findById(id);
-        if (!result) throw new NotFoundError('Brand');
-        return new OutputBrandDto(
-            result.getId() as string,
-            result.getName(),
-            result.getDescription() as string,
-            result.getProducts(),
-            result.getAsset()
-        );
+  constructor (repository: BrandRepository) {
+    this.brandRepository = repository;
+  }
+
+  public static getInstance (repo: BrandRepository) {
+    if (!FindOneBrandImpl.instance) {
+      FindOneBrandImpl.instance = new FindOneBrandImpl(repo);
     }
+    return FindOneBrandImpl.instance;
+  }
+
+  async execute (id: string): Promise<OutputBrandDto> {
+    const result = await this.brandRepository.findById(id);
+    if (result == null) throw new NotFoundError('Brand');
+    return result.getData();
+  }
 }

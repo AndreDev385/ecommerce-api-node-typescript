@@ -1,60 +1,61 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config";
-import { UserModel } from "./user.model";
-import { VariationModel } from "./variation.model";
+import { DataTypes } from 'sequelize';
+import sequelize from '../config';
+import { UserModel } from './user.model';
+import { VariationModel } from './variation.model';
 
-export const OrderModel = sequelize.define(
-  "order",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    status: {
-      type: DataTypes.STRING,
-      values: ["completed", "waiting", "canceled"],
-      defaultValue: "waiting",
-    },
-    totalPrice: {
-      type: DataTypes.FLOAT,
-      //allowNull: false,
-    },
+export const OrderItem = sequelize.define('orderItem', {
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
-  {
-    timestamps: true,
-  }
-);
+  total: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+});
+
+export const OrderModel = sequelize.define('order', {
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+  },
+  status: {
+    type: DataTypes.STRING,
+    values: ['completed', 'waiting', 'canceled'],
+    defaultValue: 'waiting',
+  },
+  totalPrice: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+});
 
 UserModel.hasMany(OrderModel, {
-  foreignKey: "userId",
-  sourceKey: "id",
+  foreignKey: 'userId',
+  sourceKey: 'id',
 });
 
 OrderModel.belongsTo(UserModel, {
-  foreignKey: "userId",
-  targetKey: "id",
+  foreignKey: 'userId',
+  targetKey: 'id',
 });
 
-const Order_Variations = sequelize.define(
-  "order_variations",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true 
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
-    }
-  },
-  { timestamps: true }
-);
-
-OrderModel.belongsToMany(VariationModel, {
-  through: "order_variations",
+OrderModel.hasMany(OrderItem, {
+  foreignKey: 'orderId',
+  sourceKey: 'id',
 });
 
-VariationModel.belongsToMany(OrderModel, {
-  through: "order_variations",
+OrderItem.belongsTo(OrderModel, {
+  foreignKey: 'orderId',
+  targetKey: 'id',
+});
+
+OrderItem.hasOne(VariationModel, {
+  foreignKey: 'itemId',
+  sourceKey: 'id',
+});
+
+VariationModel.belongsTo(OrderItem, {
+  foreignKey: 'itemId',
+  targetKey: 'id',
 });

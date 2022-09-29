@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi'
 
 const name = Joi.string().min(3);
 const stock = Joi.number();
@@ -9,7 +9,7 @@ const images = Joi.array().items(Joi.number());
 const attributes = Joi.array().items(
   Joi.object({
     name: Joi.string().required(),
-    value: Joi.string().required(),
+    value: Joi.string().required()
   })
 );
 
@@ -19,8 +19,8 @@ export const createVariationSchema = Joi.object({
   normalPrice,
   offerPrice,
   images,
-  attributes,
-});
+  attributes
+})
 
 export const updateVariationSchema = Joi.object({
   productId,
@@ -28,5 +28,5 @@ export const updateVariationSchema = Joi.object({
   normalPrice,
   offerPrice,
   images,
-  attributes,
-});
+  attributes
+})

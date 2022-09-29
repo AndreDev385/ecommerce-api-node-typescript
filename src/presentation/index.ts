@@ -11,16 +11,16 @@ import '../adapters/orm/sequelize/models/variation.model';
 import mongoose from 'mongoose';
 
 async function main() {
-    try {
-        await sequelize.sync({ force: true });
-        console.log('Sequelize Database connected');
-        await mongoose.connect(`${config.MONGO}`);
-        console.log('Mongo database connected')
-        server.listen(config.PORT);
-        console.log(`Server running on port ${config.PORT}`);
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    await sequelize.sync({ force: true });
+    console.log('Sequelize Database connected');
+    await mongoose.connect(`${config.MONGO}`);
+    console.log('Mongo database connected');
+    server.listen(config.PORT);
+    console.log(`Server running on port ${config.PORT}`);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 main();

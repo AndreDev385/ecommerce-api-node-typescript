@@ -1,112 +1,104 @@
 import { typeCheck } from 'type-check';
 import { v4 } from 'uuid';
+import { InputProductDto } from '../dtos/product-dtos';
+import { InputVariationDto } from '../dtos/variation-dtos';
 import { Asset } from './asset';
 import { Variation } from './variation';
 
 export class Product {
-    private id: string;
-    private name: string;
-    private brandId: string;
-    private categoryId: string;
-    private description: string | null;
-    private tags: Array<string> = [];
-    private asset: Asset | null;
-    private variations: Array<Variation> = [];
+  private readonly id: string;
+  private name: string;
+  private brandId: string;
+  private categoryId: string;
+  private description: string | null;
+  private readonly tags: string[] = [];
+  private asset: Asset | null;
+  private readonly variations: Variation[] = [];
 
-    constructor(
-        name: string,
-        brandId: string,
-        categoryId: string,
-        description?: string,
-        tags?: Array<string>,
-        asset?: Asset,
-        variations?: Array<Variation>
-    ) {
-        this.id = v4();
-        this.setName(name);
-        this.setBrandId(brandId);
-        this.setCategoryId(categoryId);
-        if (description) this.setDescription(description);
-        if (tags) {
-            for (const tag of tags) {
-                this.addTags(tag);
-            }
-        }
-        if (asset) this.setAsset(asset);
-        if (variations) {
-            for (const variation of variations) {
-                this.addVariation(variation);
-            }
-        }
+  constructor ({
+    id,
+    name,
+    brandId,
+    categoryId,
+    description,
+    tags,
+    asset,
+    variations
+  }: InputProductDto) {
+    this.id = id;
+    this.setName(name);
+    this.setBrandId(brandId);
+    this.setCategoryId(categoryId);
+    this.setDescription(description);
+    if (tags) {
+      for (const tag of tags) {
+        this.addTags(tag);
+      }
+    }
+    this.setAsset(asset);
+    if (variations) {
+      for (const variation of variations) {
+        this.addVariation(variation);
+      }
+    }
+  }
+
+  setName (name: string): void {
+    if (!typeCheck('String', name)) {
+      throw new Error('Name should be a string');
+    }
+    this.name = name;
+  }
+
+  setBrandId (brand: string) {
+    this.brandId = brand;
+  }
+
+  setCategoryId (category: string): void {
+    this.categoryId = category;
+  }
+
+  setDescription (str?: string) {
+    if (!str) {
+      this.description = null;
+      return
+    }
+    if (!typeCheck('String', str)) {
+      throw new Error('Description should be a string');
     }
 
-    getId(): string {
-        return this.id;
-    }
+    this.description = str;
+  }
 
-    setName(name: string): void {
-        if (!typeCheck('String', name)) {
-            throw new Error('Name should be a string');
-        }
-        this.name = name;
+  addTags (tag: string): void {
+    if (!typeCheck('String', tag)) {
+      throw new Error('Tag should be a string');
     }
+    this.tags.push(tag);
+  }
 
-    getName(): string {
-        return this.name;
+  setAsset (asset?: Asset): void {
+    if (asset == null) {
+      this.asset = null;
+      return
     }
+    this.asset = asset;
+  }
 
-    setBrandId(brand: string) {
-        this.brandId = brand;
-    }
+  addVariation (variation: Variation): void {
+    this.variations.push(variation);
+  }
 
-    getBrandId(): string {
-        return this.brandId;
-    }
-
-    setCategoryId(category: string): void {
-        this.categoryId = category;
-    }
-
-    getCategoryId(): string {
-        return this.categoryId;
-    }
-
-    setDescription(str: string) {
-        if (!typeCheck('String', str)) {
-            throw new Error('Description should be a string');
-        }
-
-        this.description = str;
-    }
-
-    getDescription(): string | null {
-        return this.description;
-    }
-
-    addTags(tag: string): void {
-        if (!typeCheck('String', tag)) {
-            throw new Error('Tag should be a string');
-        }
-        this.tags.push(tag);
-    }
-
-    getTags(): Array<string> {
-        return this.tags;
-    }
-
-    setAsset(asset: Asset): void {
-        this.asset = asset;
-    }
-
-    getAsset(): Asset | null {
-        return this.asset;
-    }
-
-    addVariation(variation: Variation): void {
-        this.variations.push(variation);
-    }
-
-    getVariations(): Array<Variation> {
-        return this.variations;
-    }
+  getData () {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      categoryId: this.categoryId,
+      brandId: this.brandId,
+      asset: this.asset,
+      variations: this.variations,
+      tags: this.tags
+    };
+  }
 }

@@ -1,42 +1,34 @@
-import { v4 } from 'uuid';
-import { resourceLimits } from 'worker_threads';
-import { Brand } from '../../../domain/entity/brand';
-import { BrandRepository } from '../../../domain/repository/interface/brand-repository';
-import { MongooseWrapper } from '../../orm/mongoose/mongoose-db-wrapper';
+import { Brand } from '../../../domain/entity/brand'
+import { BrandRepository } from '../../../domain/repository/interface/brand-repository'
+import { ModelWrapper } from '../../orm/model-wrapper'
 
 export class MongooseBrandRepository implements BrandRepository {
-    constructor(private readonly database: MongooseWrapper) {}
+  private static instance: BrandRepository
+    constructor(private readonly model: ModelWrapper) {}
 
-    async create(brand: Brand): Promise<Brand> {
-        const result = await this.database.create({
-            id: v4(),
-            name: brand.getName(),
-            description: brand.getDescription(),
-            asset: brand.getAsset(),
-            products: brand.getProducts(),
-        });
-        return result
+  public static getInstance (model: ModelWrapper) {
+    if (!MongooseBrandRepository.instance) {
+      MongooseBrandRepository.instance = new MongooseBrandRepository(model)
+        }
+    return MongooseBrandRepository.instance
     }
-    async findAll(): Promise<Brand[]> {
-        const result = await this.database.find({});
-        return result
-    }
-    async findById(id: string): Promise<Brand | null> {
-        const result = await this.database.findOne({ id });
-        if (!result) return null;
 
-        return new Brand(result.name, result.id, result.description, result.asset, result.products);
+  create (category: Brand): Promise<Brand> {
+    throw new Error('Method not implemented.')
     }
-    async findByName(name: string): Promise<Brand | null> {
-        const result = await this.database.findOne({ name });
-        if (!result) return null;
-
-        return new Brand(result.name, result.id, result.description, result.asset, result.products);
+  findAll (): Promise<Brand[]> {
+    throw new Error('Method not implemented.')
     }
-    async update(brand: Brand): Promise<Brand> {
-        throw new Error('Method not implemented.');
+  findById (id: string): Promise<Brand> {
+    throw new Error('Method not implemented.')
     }
-    delete(id: string): Promise<void> {
-        throw new Error('Method not implemented.');
+  findByName (name: string): Promise<Brand> {
+    throw new Error('Method not implemented.')
+    }
+  update (category: Brand): Promise<Brand> {
+    throw new Error('Method not implemented.')
+    }
+  delete async (id: string): Promise<void> {
+    throw new Error('Method not implemented.')
     }
 }

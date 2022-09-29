@@ -1,57 +1,70 @@
-import {
-  CreateCategoryDTO,
-  Category,
-  UpdateCategoryDTO,
-} from "../../../domain/entity/category";
-import { CategoryRepository } from "../../../domain/repository/interface/category-repository";
-import { AssetModel } from "../../orm/sequelize/models/asset.model";
-import { ProductModel } from "../../orm/sequelize/models/product.model";
-import { SequelizeWrapper } from "./db-sequelize-wrapper";
+import { Category } from '../../../domain/entity/category';
+import { CategoryRepository } from '../../../domain/repository/interface/category-repository';
+import { AssetModel } from '../../orm/sequelize/models/asset.model';
+import { ProductModel } from '../../orm/sequelize/models/product.model';
+import { SequelizeWrapper } from './db-sequelize-wrapper';
 
 export class SequelizeCategoryRepository implements CategoryRepository {
-  private database: SequelizeWrapper;
-  constructor(database: SequelizeWrapper) {
+  private readonly database: SequelizeWrapper;
+  private static instance: CategoryRepository;
+
+  constructor (database: SequelizeWrapper) {
     this.database = database;
   }
 
-  async create(category: CreateCategoryDTO): Promise<Category> {
-    const result = await this.database.create(category);
-    return result;
+  static getInstance (db: SequelizeWrapper) {
+    if (!SequelizeCategoryRepository.instance) {
+      SequelizeCategoryRepository.instance = new SequelizeCategoryRepository(db);
+    }
+    return SequelizeCategoryRepository.instance;
   }
 
-  async findAll(): Promise<Category[]> {
+  async create (category: Category): Promise<Category> {
+    const result = await this.database.create(category.getData());
+    return new Category(result);
+  }
+
+  async findAll (): Promise<Category[]> {
     const result = await this.database.findAll({
-      include: [ProductModel, AssetModel],
-      where: { isActive: true },
-    });
-    return result;
+      include: [ProductModel, AssetModel]
+    })
+    return result.map((c) => new Category(c));
   }
 
-  async findName(name: string): Promise<Category> {
+  async findByName (name: string): Promise<Category | null> {
     const result = await this.database.findOne({
       include: [ProductModel, AssetModel],
-      where: { isActive: true, name },
-    });
-    return result;
+      where: { name }
+    })
+    if (!result) {
+      return null;
+    }
+    return new Category(result);
   }
 
-  async findById(id: number): Promise<Category> {
+  async findById (id: string): Promise<Category | null> {
     const result = await this.database.findOne({
       include: [ProductModel, AssetModel],
-      where: { isActive: true, id },
-    });
-    return result;
+      where: { id }
+    })
+    if (!result) {
+      return null;
+    }
+    return new Category(result);
   }
 
-  async update(id: number, data: UpdateCategoryDTO): Promise<Category> {
-    const result = await this.database.update(
-      data,
-      { where: { isActive: true, id } }
-    );
-    return result;
+  async update (category: Category): Promise<Category> {
+    await this.database.update(category.getData(), {
+      where: { id: category.getData().id }
+    })
+    const result = await this.database.findOne({
+      where: { id: category.getData().id },
+      include: [ProductModel, AssetModel]
+    })
+    return new Category(result);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.database.update({ isActive: false }, { where: { id } });
+  async delete (id: string): Promise<void> {
+    await this.database.delete({ where: { id } });
   }
 }
