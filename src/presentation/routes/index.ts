@@ -6,10 +6,15 @@ import { SequelizeCategoryRepository } from '../../adapters/repository/sequilize
 import {
   brandDb,
   categoryDb,
+  itemDB,
+  orderDb,
   productDb,
+  userDb,
   variationDb,
 } from '../../adapters/repository/sequilize/db-sequelize-wrapper';
+import { SequelizeOrderRepository } from '../../adapters/repository/sequilize/order-repository';
 import { SequelizeProductRepository } from '../../adapters/repository/sequilize/product-repository';
+import { SequelizeUserRepository } from '../../adapters/repository/sequilize/user-repository';
 import { SequelizeVariationRepository } from '../../adapters/repository/sequilize/variation-repository';
 
 // Sequelize
@@ -24,12 +29,22 @@ import { DeleteCategoryImpl } from '../../application/impl/category/delete-categ
 import { FindOneCategoryImpl } from '../../application/impl/category/findone-category-impl';
 import { ListCategoryImpl } from '../../application/impl/category/list-category-impl';
 import { SaveCategoryImpl } from '../../application/impl/category/save-category-impl';
+import { ChangeOrderStatusImpl } from '../../application/impl/order/change-status-impl';
+import { CreateOrderImpl } from '../../application/impl/order/create-order-impl';
+import { FindOneOrderImpl } from '../../application/impl/order/findone-order-impl';
+import { ListOrderImpl } from '../../application/impl/order/list-order-impl';
+import { UpdateOrderImpl } from '../../application/impl/order/update-order-impl';
 
 //Product
 import { DeleteProductImpl } from '../../application/impl/product/delete-product-impl';
 import { FindOneProductImpl } from '../../application/impl/product/findone-product-impl';
 import { ListProductImpl } from '../../application/impl/product/list-product-impl';
 import { SaveProductImpl } from '../../application/impl/product/save-product-impl';
+import { DeleteUserImpl } from '../../application/impl/user/delete-user';
+import { FindOneUserImpl } from '../../application/impl/user/findone-user';
+import { ListUserImpl } from '../../application/impl/user/list-user';
+import { CreateUserImpl } from '../../application/impl/user/save-user';
+import { UpdateUserRoleImpl } from '../../application/impl/user/update-role-user';
 
 //Variation
 import { ListVariationImpl } from '../../application/impl/variation/list-variation-impl';
@@ -37,7 +52,9 @@ import { SaveVariationImpl } from '../../application/impl/variation/save-variati
 
 import brandRouter from './brand.routes';
 import categoryRouter from './category.routes';
+import orderRoutes from './order.routes';
 import productRouter from './product.routes';
+import userRouter from './user.routes';
 import variationRouter from './variation.routes';
 
 export const router: Router = express.Router();
@@ -77,5 +94,32 @@ router.use(
   variationRouter(
     ListVariationImpl.getInstance(SequelizeVariationRepository.getInstance(variationDb)),
     SaveVariationImpl.getInstance(SequelizeVariationRepository.getInstance(variationDb))
+  )
+);
+
+router.use(
+  '/users',
+  userRouter(
+    ListUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
+    CreateUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
+    FindOneUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
+    UpdateUserRoleImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
+    DeleteUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb))
+  )
+);
+
+router.use(
+  '/orders',
+  orderRoutes(
+    ListOrderImpl.getInstance(SequelizeOrderRepository.getInstance(orderDb, itemDB)),
+    CreateOrderImpl.getInstance(
+      SequelizeOrderRepository.getInstance(orderDb, itemDB),
+      SequelizeVariationRepository.getInstance(variationDb)
+    ),
+    FindOneOrderImpl.getInstance(SequelizeOrderRepository.getInstance(orderDb, itemDB)),
+    ChangeOrderStatusImpl.getInstance(
+      SequelizeOrderRepository.getInstance(orderDb, itemDB),
+      SequelizeVariationRepository.getInstance(variationDb)
+    )
   )
 );

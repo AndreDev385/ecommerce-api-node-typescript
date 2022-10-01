@@ -1,21 +1,27 @@
-import { ReadUserDTO, User } from '../../../domain/entity/user'
-import { NotFoundError } from '../../../domain/exceptions/exceptions'
-import { UserRepository } from '../../../domain/repository/interface/user-repository'
-import { UpdateUserRoleUseCase } from '../../usecases/user/update-user-role-usecase'
-import { CreateReadUserDTO } from '../../utils/createDtos'
+import { ReadUserDTO } from '../../../domain/dtos/user-dtos';
+import { User } from '../../../domain/entity/user';
+import { NotFoundError } from '../../../domain/exceptions/exceptions';
+import { UserRepository } from '../../../domain/repository/interface/user-repository';
+import { UpdateUserRoleUseCase } from '../../usecases/user/update-user-role-usecase';
 
 export class UpdateUserRoleImpl implements UpdateUserRoleUseCase {
-  userRepository: UserRepository;
-  constructor (ur: UserRepository) {
-    this.userRepository = ur;
+  private static instance: UpdateUserRoleUseCase;
+
+  constructor(private readonly userRepository: UserRepository) {}
+
+  static getInstance(repo: UserRepository) {
+    if (!UpdateUserRoleImpl.instance) {
+      UpdateUserRoleImpl.instance = new UpdateUserRoleImpl(repo);
+    }
+    return UpdateUserRoleImpl.instance;
   }
 
-  async execute (id: number, role: string): Promise<ReadUserDTO> {
-    User.validateUserRole(role);
-    const user = await this.userRepository.findOne(id);
-    if (!user) throw new NotFoundError('User')
-    await this.userRepository.updateRole(id, role);
-    const result = await this.userRepository.findOne(id);
-    return CreateReadUserDTO(result);
+  async execute(id: string, role: string): Promise<ReadUserDTO> {
+    const existUser = await this.userRepository.findOne(id);
+    if (!existUser) throw new NotFoundError('User');
+    console.log(existUser);
+    existUser.setRole(role);
+    await this.userRepository.updateRole(existUser.getData().id, existUser.getData().role);
+    return new ReadUserDTO(existUser.getData());
   }
 }

@@ -12,7 +12,7 @@ import mongoose from 'mongoose';
 
 async function main() {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync(/*{ force: true }*/);
     console.log('Sequelize Database connected');
     await mongoose.connect(`${config.MONGO}`);
     console.log('Mongo database connected');

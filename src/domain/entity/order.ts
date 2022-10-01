@@ -5,11 +5,23 @@ import { Variation } from './variation';
 type Status = string | 'waiting' | 'canceled' | 'completed';
 
 export class OrderItem {
-  private readonly variation: Variation;
+  private orderId: string;
+  private variation: Variation;
   private name: string;
   private quantity: number;
 
-  constructor(variation: Variation, name: string, quantity: number) {
+  constructor({
+    orderId,
+    variation,
+    name,
+    quantity,
+  }: {
+    orderId: string;
+    variation: Variation;
+    name: string;
+    quantity: number;
+  }) {
+    this.orderId = orderId;
     this.variation = variation;
     this.setName(name);
     this.setQuantity(quantity);
@@ -38,9 +50,11 @@ export class OrderItem {
 
   getData() {
     return {
+      orderId: this.orderId,
       name: this.name,
       variation: this.variation,
       quantity: this.quantity,
+      total: this.getTotal(),
     };
   }
 }
@@ -50,17 +64,13 @@ export class Order {
   private userId: string;
   private total: number | null;
   private status: Status;
-  private readonly items: OrderItem[] = [];
+  private items: OrderItem[] = [];
 
-  constructor({ userId, status }: { userId: string; status: string }) {
-    this.setId();
+  constructor({ id, userId, status }: { id: string; userId: string; status: string }) {
+    this.id = id;
     this.setUserId(userId);
     this.setStatus(status);
     this.total = null;
-  }
-
-  private setId(): void {
-    this.id = v4();
   }
 
   setUserId(id: string): void {
@@ -80,10 +90,8 @@ export class Order {
 
   getTotalPrice(): number {
     if (this.total === null) {
-      console.log('entry in if', this.total);
-      const items = this.items;
       let totalPrice = 0;
-      for (const item of items) {
+      for (const item of this.items) {
         const itemPrice = item.getTotal();
         totalPrice += itemPrice;
       }

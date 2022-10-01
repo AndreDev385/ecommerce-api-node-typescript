@@ -15,7 +15,7 @@ export class Product {
   private asset: Asset | null;
   private readonly variations: Variation[] = [];
 
-  constructor ({
+  constructor({
     id,
     name,
     brandId,
@@ -23,7 +23,7 @@ export class Product {
     description,
     tags,
     asset,
-    variations
+    variations,
   }: InputProductDto) {
     this.id = id;
     this.setName(name);
@@ -43,25 +43,25 @@ export class Product {
     }
   }
 
-  setName (name: string): void {
+  setName(name: string): void {
     if (!typeCheck('String', name)) {
       throw new Error('Name should be a string');
     }
     this.name = name;
   }
 
-  setBrandId (brand: string) {
+  setBrandId(brand: string) {
     this.brandId = brand;
   }
 
-  setCategoryId (category: string): void {
+  setCategoryId(category: string): void {
     this.categoryId = category;
   }
 
-  setDescription (str?: string) {
+  setDescription(str?: string | null) {
     if (!str) {
       this.description = null;
-      return
+      return;
     }
     if (!typeCheck('String', str)) {
       throw new Error('Description should be a string');
@@ -70,26 +70,26 @@ export class Product {
     this.description = str;
   }
 
-  addTags (tag: string): void {
+  addTags(tag: string): void {
     if (!typeCheck('String', tag)) {
       throw new Error('Tag should be a string');
     }
     this.tags.push(tag);
   }
 
-  setAsset (asset?: Asset): void {
-    if (asset == null) {
+  setAsset(asset?: Asset | null): void {
+    if (!asset) {
       this.asset = null;
-      return
+      return;
     }
     this.asset = asset;
   }
 
-  addVariation (variation: Variation): void {
+  addVariation(variation: Variation): void {
     this.variations.push(variation);
   }
 
-  getData () {
+  getData() {
     return {
       id: this.id,
       name: this.name,
@@ -98,7 +98,7 @@ export class Product {
       brandId: this.brandId,
       asset: this.asset,
       variations: this.variations,
-      tags: this.tags
+      tags: this.tags,
     };
   }
 }

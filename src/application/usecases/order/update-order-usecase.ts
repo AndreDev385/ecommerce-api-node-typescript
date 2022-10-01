@@ -1,5 +1,5 @@
-import { Order, ReadOrderDTO, UpdateOrderDTO } from '../../../domain/entity/order'
+import { ReadOrderDTO, UpdateOrderDTO } from '../../../domain/dtos/order-dtos';
 
 export interface UpdateOrderUseCase {
-  execute: (id: number, order: UpdateOrderDTO) => Promise<ReadOrderDTO>
+  execute: (id: string, order: UpdateOrderDTO) => Promise<ReadOrderDTO>;
 }

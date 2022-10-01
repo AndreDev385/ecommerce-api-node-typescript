@@ -8,9 +8,8 @@ export interface InputVariationDto {
   assets: Asset[];
   attributes: Attribute[];
   price: number;
-  offerPrice: number;
+  offerPrice?: number;
   stock: number;
-  isAvaible: boolean;
 }
 
 export interface UpdateVariation {

@@ -1,22 +1,35 @@
-import { CreateAssetDTO, Asset, UpdateAssetDTO } from '../../../domain/entity/asset'
-import { AssetRepository } from '../../../domain/repository/interface/asset-repository'
-import { SequelizeWrapper } from './db-sequelize-wrapper'
+import { Asset } from '../../../domain/entity/asset';
+import { AssetRepository } from '../../../domain/repository/interface/asset-repository';
+import { SequelizeWrapper } from './db-sequelize-wrapper';
 
 export class SequelizeAssetRepository implements AssetRepository {
-  constructor (private readonly database: SequelizeWrapper) {}
-  async findOne (id: number): Promise<Asset> {
-    return await this.database.findOne({ where: { id, isActive: true } });
+  private static instance: AssetRepository;
+
+  constructor(private readonly database: SequelizeWrapper) {}
+
+  static getInstance(db: SequelizeWrapper) {
+    if (!SequelizeAssetRepository.instance) {
+      SequelizeAssetRepository.instance = new SequelizeAssetRepository(db);
+    }
+    return SequelizeAssetRepository.instance;
   }
 
-  async update (id: number, data: UpdateAssetDTO): Promise<Asset> {
-    return await this.database.update(data, { where: { id } });
+  async create(asset: Asset) {
+    const result = await this.database.create(asset.getData());
+    return asset;
   }
-
-  async create (asset: CreateAssetDTO): Promise<Asset> {
-    return await this.database.create(asset);
+  async findAll() {
+    const result = await this.database.findAll({});
+    return result.map((a) => new Asset(a));
   }
-
-  async findAll (): Promise<Asset[]> {
-    return await this.database.findAll({ where: { isActive: true } });
+  async findOne(id: string) {
+    const result = await this.database.findOne({ where: { id } });
+    return new Asset(result);
+  }
+  async update(asset: Asset) {
+    const result = await this.database.update(asset.getData(), {
+      where: { id: asset.getData().id },
+    });
+    return asset;
   }
 }

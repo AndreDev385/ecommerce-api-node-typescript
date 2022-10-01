@@ -8,43 +8,44 @@ export const CategoryModel = sequelize.define(
   {
     id: {
       type: DataTypes.STRING,
-      primaryKey: true
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
-      defaultValue: ''
+      defaultValue: '',
     },
     slug: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     tags: {
       type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: []
-    }
-  }
-)
+      defaultValue: [],
+    },
+  },
+  { timestamps: false }
+);
 
 CategoryModel.hasMany(ProductModel, {
   foreignKey: 'categoryId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 ProductModel.belongsTo(CategoryModel, {
   foreignKey: 'categoryId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});
 
 CategoryModel.hasOne(AssetModel, {
   foreignKey: 'categoryId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 AssetModel.belongsTo(CategoryModel, {
   foreignKey: 'categoryId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});

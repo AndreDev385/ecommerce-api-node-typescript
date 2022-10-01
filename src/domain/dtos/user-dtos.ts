@@ -1,29 +1,26 @@
 export class CreateUserDTO {
+  id: string;
   name: string;
   email: string;
   password: string;
   role: string;
-  phoneNumber?: string;
+  phoneNumber?: string | null;
 }
 
 export class ReadUserDTO {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
-  phoneNumber: string;
+  phoneNumber: string | null;
 
-  constructor (
-    id: number,
-    name: string,
-    email: string,
-    role: string,
-    phoneNumber: string
-  ) {
+  constructor({ id, name, email, role, phoneNumber }: CreateUserDTO) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.role = role;
-    this.phoneNumber = phoneNumber;
+    if (phoneNumber) {
+      this.phoneNumber = phoneNumber;
+    }
   }
 }

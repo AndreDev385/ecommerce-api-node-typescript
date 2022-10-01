@@ -1,11 +1,11 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { CreateUserUseCase } from '../../application/usecases/user/create-user-usecase'
-import { DeleteUserUseCase } from '../../application/usecases/user/delete-user-usecase'
-import { FindOneUserUseCase } from '../../application/usecases/user/findone-user-usecase'
-import { ListUserUseCase } from '../../application/usecases/user/list-user-usecase'
-import { UpdateUserRoleUseCase } from '../../application/usecases/user/update-user-role-usecase'
+import express, { NextFunction, Request, Response } from 'express';
+import { CreateUserUseCase } from '../../application/usecases/user/create-user-usecase';
+import { DeleteUserUseCase } from '../../application/usecases/user/delete-user-usecase';
+import { FindOneUserUseCase } from '../../application/usecases/user/findone-user-usecase';
+import { ListUserUseCase } from '../../application/usecases/user/list-user-usecase';
+import { UpdateUserRoleUseCase } from '../../application/usecases/user/update-user-role-usecase';
 
-export default function userRouter (
+export default function userRouter(
   listUsers: ListUserUseCase,
   createUser: CreateUserUseCase,
   findOne: FindOneUserUseCase,
@@ -33,45 +33,36 @@ export default function userRouter (
     }
   });
 
-  router.get(
-    '/:id',
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { id } = req.params;
-        const user = await findOne.execute(Number(id));
-        res.status(200).json(user);
-      } catch (err: any) {
-        next(err);
-      }
+  router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = await findOne.execute(id);
+      res.status(200).json(user);
+    } catch (err: any) {
+      next(err);
     }
-  );
+  });
 
-  router.patch(
-    '/:id/role',
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { body } = req;
-        const { id } = req.params;
-        const user = await updateUserRole.execute(Number(id), body.role);
-        res.status(200).json(user);
-      } catch (err: any) {
-        next(err);
-      }
+  router.patch('/:id/role', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { body } = req;
+      const { id } = req.params;
+      const user = await updateUserRole.execute(id, body.role);
+      res.status(200).json(user);
+    } catch (err: any) {
+      next(err);
     }
-  );
+  });
 
-  router.delete(
-    '/:id',
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { id } = req.params;
-        await deleteOne.execute(Number(id));
-        res.status(200).json({ message: 'User deleted' });
-      } catch (err: any) {
-        next(err);
-      }
+  router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      await deleteOne.execute(id);
+      res.status(200).json({ message: 'User deleted' });
+    } catch (err: any) {
+      next(err);
     }
-  );
+  });
 
   return router;
 }

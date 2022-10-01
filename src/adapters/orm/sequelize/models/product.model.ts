@@ -10,11 +10,11 @@ export const ProductModel = sequelize.define(
   {
     id: {
       type: DataTypes.STRING,
-      primaryKey: true
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     /* brandId: {
       type: DataTypes.INTEGER,
@@ -34,31 +34,32 @@ export const ProductModel = sequelize.define(
     }, */
     description: {
       type: DataTypes.STRING,
-      defaultValue: null
+      defaultValue: null,
     },
     tags: {
       type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: []
-    }
-  }
-)
+      defaultValue: [],
+    },
+  },
+  { timestamps: false }
+);
 
 ProductModel.hasMany(VariationModel, {
   foreignKey: 'productId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 VariationModel.belongsTo(ProductModel, {
   foreignKey: 'productId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});
 
 ProductModel.hasOne(AssetModel, {
   foreignKey: 'productId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 AssetModel.belongsTo(ProductModel, {
   foreignKey: 'productId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});

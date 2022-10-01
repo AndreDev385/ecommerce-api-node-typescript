@@ -3,32 +3,50 @@ import sequelize from '../config';
 import { UserModel } from './user.model';
 import { VariationModel } from './variation.model';
 
-export const OrderItem = sequelize.define('orderItem', {
-  quantity: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+export const Item = sequelize.define(
+  'item',
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    variationId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    total: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
   },
-  total: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
-export const OrderModel = sequelize.define('order', {
-  id: {
-    type: DataTypes.STRING,
-    primaryKey: true,
+export const OrderModel = sequelize.define(
+  'order',
+  {
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    status: {
+      type: DataTypes.STRING,
+      values: ['completed', 'waiting', 'canceled'],
+      defaultValue: 'waiting',
+    },
+    total: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
   },
-  status: {
-    type: DataTypes.STRING,
-    values: ['completed', 'waiting', 'canceled'],
-    defaultValue: 'waiting',
-  },
-  totalPrice: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-});
+  { timestamps: false }
+);
 
 UserModel.hasMany(OrderModel, {
   foreignKey: 'userId',
@@ -40,22 +58,22 @@ OrderModel.belongsTo(UserModel, {
   targetKey: 'id',
 });
 
-OrderModel.hasMany(OrderItem, {
+OrderModel.hasMany(Item, {
   foreignKey: 'orderId',
   sourceKey: 'id',
 });
 
-OrderItem.belongsTo(OrderModel, {
+Item.belongsTo(OrderModel, {
   foreignKey: 'orderId',
   targetKey: 'id',
 });
 
-OrderItem.hasOne(VariationModel, {
+Item.hasOne(VariationModel, {
   foreignKey: 'itemId',
   sourceKey: 'id',
 });
 
-VariationModel.belongsTo(OrderItem, {
+VariationModel.belongsTo(Item, {
   foreignKey: 'itemId',
   targetKey: 'id',
 });

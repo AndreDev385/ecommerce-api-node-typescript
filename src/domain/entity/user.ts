@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { typeCheck } from 'type-check';
 import { v4 } from 'uuid';
+import { CreateUserDTO } from '../dtos/user-dtos';
 import { InvalidPasswordError } from '../exceptions/user-exceptions';
 
 export class User {
@@ -11,8 +12,8 @@ export class User {
   private role: string;
   private phoneNumber: string | null;
 
-  constructor (name: string, email: string, password: string, role: string, phoneNumber?: string) {
-    this.id = v4();
+  constructor({ id, name, email, password, role, phoneNumber }: CreateUserDTO) {
+    this.id = id;
     this.setName(name);
     this.setEmail(email);
     this.setPassword(password);
@@ -20,7 +21,7 @@ export class User {
     this.setPhoneNumber(phoneNumber);
   }
 
-  setName (str: string): void {
+  setName(str: string): void {
     if (!str) {
       throw new Error('Name is required');
     }
@@ -34,7 +35,7 @@ export class User {
     this.name = str;
   }
 
-  setEmail (str: string): void {
+  setEmail(str: string): void {
     if (!str) {
       throw new Error('Email is required');
     }
@@ -54,27 +55,27 @@ export class User {
     this.email = str;
   }
 
-  private hashPassword (password: string) {
+  private hashPassword(password: string) {
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
     this.password = hash;
   }
 
-  setPassword (str: string) {
+  setPassword(str: string) {
     if (!str) {
       throw new Error('Password is required');
     }
     if (!typeCheck('String', str)) {
       throw new Error('Password should be a string');
     }
-    if (str.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/) == null) {
+    if (str.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/) == null) {
       throw new Error('Invalid password');
     }
 
     this.hashPassword(str);
   }
 
-  static validatePassword (password: string, hash: string) {
+  static validatePassword(password: string, hash: string) {
     const isValid = bcrypt.compareSync(password, hash);
     if (!isValid) {
       throw new Error('Invalid password');
@@ -82,7 +83,7 @@ export class User {
     return isValid;
   }
 
-  setRole (str: string) {
+  setRole(str: string) {
     if (!str) {
       throw new Error('Role is required');
     }
@@ -95,28 +96,28 @@ export class User {
     this.role = str;
   }
 
-  setPhoneNumber (str?: string) {
+  setPhoneNumber(str?: string | null) {
     if (!str) {
       this.phoneNumber = null;
-      return
+      return;
     }
     if (!typeCheck('String', str)) {
       throw new Error('Phone number should be a string');
     }
-    if ((str?.match(/^[0-9]+$/)) == null) {
+    if (str?.match(/^[0-9]+$/) == null) {
       throw new Error('Invalid phone number');
     }
     this.phoneNumber = str;
   }
 
-  getData () {
+  getData() {
     return {
       id: this.id,
       name: this.name,
       email: this.email,
       password: this.password,
       role: this.role,
-      phoneNumber: this.phoneNumber
+      phoneNumber: this.phoneNumber,
     };
   }
 }

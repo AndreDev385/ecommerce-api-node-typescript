@@ -5,21 +5,21 @@ import { InputAssetDto, ReadAssetDTO } from './asset-dtos';
 import { InputVariationDto } from './variation-dtos';
 
 export interface InputProductDto {
-  id: string
-  name: string
-  brandId: string
-  categoryId: string
-  description: string
-  asset: Asset
-  tags: string[]
-  variations: Variation[]
+  id: string;
+  name: string;
+  brandId: string;
+  categoryId: string;
+  description?: string | null;
+  asset?: Asset | null;
+  tags?: string[];
+  variations?: Variation[];
 }
 
 export interface UpdateProductDTO {
-  name?: string
-  brand?: Brand
-  description?: string
-  tags?: string[]
+  name?: string;
+  brand?: Brand;
+  description?: string;
+  tags?: string[];
 }
 
 export class ReadProductDTO {
@@ -32,7 +32,7 @@ export class ReadProductDTO {
   asset: Asset | null;
   variations: Variation[];
 
-  constructor (
+  constructor(
     id: string,
     name: string,
     brandId: string,

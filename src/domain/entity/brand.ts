@@ -13,7 +13,7 @@ export class Brand {
   private asset: Asset | null;
   private readonly products: Product[] = [];
 
-  constructor ({ id, name, description, asset, products }: InputBrandDto) {
+  constructor({ id, name, description, asset, products }: InputBrandDto) {
     console.log(name, description, asset, products, 'Data');
     this.id = id;
     this.setName(name);
@@ -27,7 +27,7 @@ export class Brand {
     }
   }
 
-  setName (name: string): void {
+  setName(name: string): void {
     if (!name) {
       throw new Error('Name is required');
     }
@@ -40,17 +40,17 @@ export class Brand {
     this.name = name;
   }
 
-  setSlug (slug: string): void {
+  setSlug(slug: string): void {
     if (!typeCheck('String', slug)) {
       throw new Error('Slug should be a string');
     }
     this.slug = slugify.convert(slug);
   }
 
-  setDescription (description: string): void {
+  setDescription(description?: string): void {
     if (!description) {
       this.description = null;
-      return
+      return;
     }
     if (!typeCheck('String', description)) {
       throw new Error('Description should be a string');
@@ -58,26 +58,26 @@ export class Brand {
     this.description = description;
   }
 
-  setAsset (asset: Asset): void {
+  setAsset(asset?: Asset): void {
     if (!asset) {
       this.asset = null;
-      return
+      return;
     }
     this.asset = asset;
   }
 
-  addProduct (product: Product): void {
+  addProduct(product: Product): void {
     this.products.push(product);
   }
 
-  getData () {
+  getData() {
     return {
       id: this.id,
       name: this.name,
       slug: this.slug,
       description: this.description,
       asset: this.asset,
-      products: this.products
+      products: this.products,
     };
   }
 }

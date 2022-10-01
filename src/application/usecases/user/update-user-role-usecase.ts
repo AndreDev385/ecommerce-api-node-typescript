@@ -1,5 +1,5 @@
-import { ReadUser, ReadUserDTO } from '../../../domain/entity/user'
+import { ReadUserDTO } from '../../../domain/dtos/user-dtos';
 
 export interface UpdateUserRoleUseCase {
-  execute: (id: number, role: string) => Promise<ReadUserDTO>
+  execute: (id: string, role: string) => Promise<ReadUserDTO>;
 }

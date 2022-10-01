@@ -2,7 +2,7 @@ import { UpdateOptions } from 'sequelize/types';
 import { AssetModel } from '../../orm/sequelize/models/asset.model';
 import { BrandModel } from '../../orm/sequelize/models/brand.model';
 import { CategoryModel } from '../../orm/sequelize/models/category.model';
-import { OrderModel } from '../../orm/sequelize/models/order.model';
+import { Item, OrderModel } from '../../orm/sequelize/models/order.model';
 import { ProductModel } from '../../orm/sequelize/models/product.model';
 import { TokenModel } from '../../orm/sequelize/models/token.model';
 import { UserModel } from '../../orm/sequelize/models/user.model';
@@ -86,4 +86,12 @@ export const orderDb: SequelizeWrapper = {
   findOne: async (query) => await OrderModel.findOne(query),
   update: async (values, where) => await OrderModel.update(values, where),
   delete: async (query) => await OrderModel.destroy(query),
+};
+
+export const itemDB: SequelizeWrapper = {
+  findAll: async (query) => await Item.findAll(query),
+  create: async (doc) => await Item.create(doc),
+  findOne: async (query) => await Item.findOne(query),
+  update: async (values, where) => await Item.update(values, where),
+  delete: async (query) => await Item.destroy(query),
 };

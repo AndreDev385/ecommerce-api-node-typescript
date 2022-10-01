@@ -1,48 +1,55 @@
-import { CreateOrderDTO, Order, ReadOrderDTO } from '../../../domain/entity/order'
-import { Variation } from '../../../domain/entity/variation'
-import { NotFoundError } from '../../../domain/exceptions/exceptions'
-import { OrderRepository } from '../../../domain/repository/interface/order-repository'
-import { VariationRepository } from '../../../domain/repository/interface/variation-repository'
-import { CreateOrderUseCase } from '../../usecases/order/create-order-usecase'
-import { CreateReadOrderDTO } from '../../utils/createDtos'
+import { v4 } from 'uuid';
+import { CreateOrder, CreateOrderDTO, ReadOrderDTO } from '../../../domain/dtos/order-dtos';
+import { Order, OrderItem } from '../../../domain/entity/order';
+import { NotFoundError } from '../../../domain/exceptions/exceptions';
+import { OrderRepository } from '../../../domain/repository/interface/order-repository';
+import { VariationRepository } from '../../../domain/repository/interface/variation-repository';
+import { CreateOrderUseCase } from '../../usecases/order/create-order-usecase';
 
 export class CreateOrderImpl implements CreateOrderUseCase {
-  constructor (
+  private static instance: CreateOrderUseCase;
+
+  constructor(
     private readonly orderRepo: OrderRepository,
     private readonly variationRepo: VariationRepository
   ) {}
 
-  async execute (order: CreateOrderDTO): Promise<ReadOrderDTO | void> {
-    // Validate order data
-    Order.validateCreateOrder(order);
+  static getInstance(orderRepo: OrderRepository, variationRepo: VariationRepository) {
+    if (!CreateOrderImpl.instance) {
+      CreateOrderImpl.instance = new CreateOrderImpl(orderRepo, variationRepo);
+    }
+    return CreateOrderImpl.instance;
+  }
 
-    // Crear la orden
-    const new_order = await this.orderRepo.create({ userId: order.userId });
+  async execute(input: CreateOrderDTO): Promise<any> {
+    input = new CreateOrder(input);
 
-    // añadir variaciones, cantidad y calcular precio
-    let price = 0;
-    for (const { id, quantity } of order.variations) {
-      console.log(id);
-      const variation = await this.variationRepo.findOne(id);
+    let id = v4();
+    const order = new Order({ id, userId: input.userId, status: 'waiting' });
+
+    for (const item of input.items) {
+      let variation = await this.variationRepo.findOne(item.variationId);
+
       if (!variation) {
-        throw new NotFoundError('Variation')
+        throw new NotFoundError();
       }
-      if (!variation.isAvaible) {
-        throw new Error('Product not avaible')
-        return;
+      if (item.quantity > variation.getData().stock) {
+        throw new Error('There is no stock avaible');
       }
-      price += variation.normalPrice * quantity;
-      /* variation.Order_Variations = {
-        quantity,
-      }; */
-      await new_order.addVariation(variation, { through: { quantity } });
+      let orderItem = new OrderItem({
+        orderId: order.getData().id,
+        variation,
+        name: item.productName,
+        quantity: item.quantity,
+      });
+      order.addItem(orderItem);
+      variation.setStock(variation.getData().stock - item.quantity);
+      await this.variationRepo.update(variation);
     }
 
-    // actualizar orden
-    await this.orderRepo.updateOrder(order.userId, { totalPrice: price });
+    order.getTotalPrice();
+    await this.orderRepo.create(order);
 
-    // return
-    const result = await this.orderRepo.findById(order.userId);
-    return CreateReadOrderDTO(result)
+    return order.getData();
   }
 }

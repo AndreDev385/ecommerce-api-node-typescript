@@ -8,18 +8,18 @@ export class SaveProductImpl implements SaveProductUseCase {
   private readonly productRepository: ProductRepository;
   private static instance: SaveProductImpl;
 
-  constructor (repository: ProductRepository) {
+  constructor(repository: ProductRepository) {
     this.productRepository = repository;
   }
 
-  static getInstance (repo: ProductRepository) {
+  static getInstance(repo: ProductRepository) {
     if (!SaveProductImpl.instance) {
       SaveProductImpl.instance = new SaveProductImpl(repo);
     }
     return SaveProductImpl.instance;
   }
 
-  async execute (input: InputProductDto): Promise<object> {
+  async execute(input: InputProductDto): Promise<object> {
     let result: Product;
     if (input.id) {
       const product = new Product(input);
@@ -29,7 +29,7 @@ export class SaveProductImpl implements SaveProductUseCase {
       const brand = new Product({ ...input, id });
       const existBrand = await this.productRepository.findByName(brand.getData().name);
 
-      if (existBrand instanceof Product && existBrand.getData().name == brand.getData().name) {
+      if (existBrand) {
         throw new Error('Product already exist!');
       }
       result = await this.productRepository.create(brand);

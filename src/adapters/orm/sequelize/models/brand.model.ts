@@ -11,39 +11,42 @@ export const BrandModel = sequelize.define(
     id: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     slug: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
-      defaultValue: null
-    }
+      defaultValue: null,
+    },
+  },
+  {
+    timestamps: false,
   }
-)
+);
 
 BrandModel.hasMany(ProductModel, {
   foreignKey: 'brandId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 ProductModel.belongsTo(BrandModel, {
   foreignKey: 'brandId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});
 
 BrandModel.hasOne(AssetModel, {
   foreignKey: 'brandId',
-  sourceKey: 'id'
-})
+  sourceKey: 'id',
+});
 
 AssetModel.belongsTo(BrandModel, {
   foreignKey: 'brandId',
-  targetKey: 'id'
-})
+  targetKey: 'id',
+});

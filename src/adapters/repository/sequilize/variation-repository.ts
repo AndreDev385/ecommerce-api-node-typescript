@@ -16,20 +16,32 @@ export class SequelizeVariationRepository implements VariationRepository {
   }
 
   async create(variation: Variation): Promise<Variation> {
-    const result = await this.database.create(variation, { include: AttributesModel });
+    const result = await this.database.create(variation.getData(), { include: AttributesModel });
     return new Variation(result);
   }
 
   async findAll(): Promise<Variation[]> {
     const result = await this.database.findAll({
-      include: [AssetModel, AttributesModel],
+      include: [
+        {
+          model: AttributesModel,
+          through: { attributes: [] },
+        },
+        AssetModel,
+      ],
     });
     return result.map((v) => new Variation(v));
   }
 
   async findOne(id: string): Promise<Variation | null> {
     const result = await this.database.findOne({
-      include: [AssetModel, AttributesModel],
+      include: [
+        {
+          model: AttributesModel,
+          through: { attributes: [] },
+        },
+        AssetModel,
+      ],
       where: { id },
     });
 
