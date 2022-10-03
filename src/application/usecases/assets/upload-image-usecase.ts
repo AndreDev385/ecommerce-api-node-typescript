@@ -1,5 +1,5 @@
 import { ReadAssetDTO } from '../../../domain/dtos/asset-dtos';
 
 export interface UploadImageUseCase {
-  execute: ({ userId, path }: { userId: string, path: string }) => Promise<ReadAssetDTO>
+  execute: ({ path }: { path: string }) => Promise<ReadAssetDTO>;
 }

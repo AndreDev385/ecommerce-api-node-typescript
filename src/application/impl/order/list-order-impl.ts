@@ -17,7 +17,6 @@ export class ListOrderImpl implements ListOrderUseCase {
 
   async execute(filters: object): Promise<ReadOrderDTO[]> {
     const orders = await this.repository.findAll(filters);
-    console.log(orders);
     return orders;
   }
 }

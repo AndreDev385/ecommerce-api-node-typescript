@@ -18,8 +18,6 @@ export class FindOneOrderImpl implements FindOneOrderUseCase {
   async execute(id: string): Promise<ReadOrderDTO> {
     const result = await this.repository.findById(id);
 
-    console.log(result);
-
     return result;
   }
 }

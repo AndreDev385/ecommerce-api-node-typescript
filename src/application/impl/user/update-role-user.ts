@@ -19,7 +19,6 @@ export class UpdateUserRoleImpl implements UpdateUserRoleUseCase {
   async execute(id: string, role: string): Promise<ReadUserDTO> {
     const existUser = await this.userRepository.findOne(id);
     if (!existUser) throw new NotFoundError('User');
-    console.log(existUser);
     existUser.setRole(role);
     await this.userRepository.updateRole(existUser.getData().id, existUser.getData().role);
     return new ReadUserDTO(existUser.getData());

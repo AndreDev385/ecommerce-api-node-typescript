@@ -22,11 +22,9 @@ export class SequelizeOrderRepository implements OrderRepository {
   }
 
   async create(order: Order) {
-    console.log('IN CREATE ORDER PARAMETER', order);
     await this.orderDb.create(order.getData());
 
     for (const item of order.getData().items) {
-      console.log('ITEM', item.getData());
       await this.itemDb.create({
         name: item.getData().name,
         orderId: item.getData().orderId,

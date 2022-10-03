@@ -1,4 +1,5 @@
 export interface InputAssetDto {
+  id: string
   originalUrl: string
   optimizedUrl?: string
 }

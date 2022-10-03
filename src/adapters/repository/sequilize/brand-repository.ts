@@ -22,7 +22,6 @@ export class SequelizeBrandRepository implements BrandRepository {
 
   async create (brand: Brand): Promise<Brand> {
     const result = await this.database.create(brand.getData());
-    console.log(result, 'result');
     return new Brand(result);
   }
 
@@ -32,7 +31,6 @@ export class SequelizeBrandRepository implements BrandRepository {
   }
 
   async findByName (name: string): Promise<Brand | null> {
-    console.log(name, 'find By name');
     const result = await this.database.findOne({
       where: { name },
       include: [ProductModel, AssetModel]

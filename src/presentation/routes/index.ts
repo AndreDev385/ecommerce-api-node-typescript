@@ -1,21 +1,33 @@
 import express, { Router } from 'express';
+import { SequelizeAssetRepository } from '../../adapters/repository/sequilize/asset-repository';
 
 //Repositories
 import { SequelizeBrandRepository } from '../../adapters/repository/sequilize/brand-repository';
 import { SequelizeCategoryRepository } from '../../adapters/repository/sequilize/category-repository';
 import {
+  assetDb,
   brandDb,
   categoryDb,
   itemDB,
   orderDb,
   productDb,
+  tokenDb,
   userDb,
   variationDb,
 } from '../../adapters/repository/sequilize/db-sequelize-wrapper';
 import { SequelizeOrderRepository } from '../../adapters/repository/sequilize/order-repository';
 import { SequelizeProductRepository } from '../../adapters/repository/sequilize/product-repository';
+import { SequelizeTokenRepository } from '../../adapters/repository/sequilize/token-repository';
 import { SequelizeUserRepository } from '../../adapters/repository/sequilize/user-repository';
 import { SequelizeVariationRepository } from '../../adapters/repository/sequilize/variation-repository';
+import { ListAssetsImpl } from '../../application/impl/assets/list-assets';
+import { UploadAssetAWS } from '../../application/impl/assets/upload-asset-aws';
+import { UploadAssetCloudinary } from '../../application/impl/assets/upload-asset-cloudinary';
+import { GenerateAndSignAccessTokenImpl } from '../../application/impl/auth/generate-access-token';
+import { GenerateAndSignRefreshTokenImpl } from '../../application/impl/auth/generate-refresh-token';
+import { IsValidRefreshTokenImpl } from '../../application/impl/auth/isvalid-refresh-token';
+import { LoginImpl } from '../../application/impl/auth/login-impl';
+import { RefreshTokenImpl } from '../../application/impl/auth/refresh-token';
 
 // Sequelize
 // Brand
@@ -49,6 +61,10 @@ import { UpdateUserRoleImpl } from '../../application/impl/user/update-role-user
 //Variation
 import { ListVariationImpl } from '../../application/impl/variation/list-variation-impl';
 import { SaveVariationImpl } from '../../application/impl/variation/save-variation-impl';
+import { uploadHandler } from '../middlewares/multer-handler';
+import { CloudinaryUploader } from '../upload/cloudinary';
+import assetRouter from './asset.routes';
+import authRouter from './auth.routes';
 
 import brandRouter from './brand.routes';
 import categoryRouter from './category.routes';
@@ -58,6 +74,18 @@ import userRouter from './user.routes';
 import variationRouter from './variation.routes';
 
 export const router: Router = express.Router();
+
+router.use(
+  '/assets',
+  assetRouter(
+    ListAssetsImpl.getInstance(SequelizeAssetRepository.getInstance(assetDb)),
+    UploadAssetAWS.getInstance(SequelizeAssetRepository.getInstance(assetDb)),
+    UploadAssetCloudinary.getInstance(
+      SequelizeAssetRepository.getInstance(assetDb),
+      new CloudinaryUploader()
+    )
+  )
+);
 
 router.use(
   '/brands',
@@ -105,6 +133,22 @@ router.use(
     FindOneUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
     UpdateUserRoleImpl.getInstance(SequelizeUserRepository.getInstance(userDb)),
     DeleteUserImpl.getInstance(SequelizeUserRepository.getInstance(userDb))
+  )
+);
+
+router.use(
+  '/auth',
+  authRouter(
+    new LoginImpl(
+      SequelizeUserRepository.getInstance(userDb),
+      new SequelizeTokenRepository(tokenDb),
+      new GenerateAndSignAccessTokenImpl(),
+      new GenerateAndSignRefreshTokenImpl()
+    ),
+    new RefreshTokenImpl(
+      new GenerateAndSignAccessTokenImpl(),
+      new IsValidRefreshTokenImpl(new SequelizeTokenRepository(tokenDb))
+    )
   )
 );
 

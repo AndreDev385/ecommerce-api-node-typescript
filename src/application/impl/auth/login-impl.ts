@@ -7,48 +7,38 @@ import { TokenRepository } from '../../../domain/repository/interface/token-repo
 import { NotFoundError } from '../../../domain/exceptions/exceptions';
 
 export class LoginImpl implements LoginUseCase {
-  userRepository: UserRepository;
-  tokenRepository: TokenRepository;
-  generateAccessToken: GenerateAccessTokenUseCase;
-  generateRefreshToken: GenerateRefreshTokenUseCase;
+  constructor(
+    private userRepo: UserRepository,
+    private tokenRepo: TokenRepository,
+    private generateAccessToken: GenerateAccessTokenUseCase,
+    private generateRefreshToken: GenerateRefreshTokenUseCase
+  ) {}
 
-  constructor (
-    userRepo: UserRepository,
-    tokenRepo: TokenRepository,
-    generateAccessToken: GenerateAccessTokenUseCase,
-    generateRefreshToken: GenerateRefreshTokenUseCase
-  ) {
-    this.userRepository = userRepo;
-    this.tokenRepository = tokenRepo;
-    this.generateAccessToken = generateAccessToken;
-    this.generateRefreshToken = generateRefreshToken;
-  }
-
-  async execute (credentials: Credentials): Promise<Jwt> {
+  async execute(credentials: Credentials): Promise<Jwt> {
     // User.validateCredentials(credentials);
-    const user = await this.userRepository.findByEmail(credentials.email);
+    const user = await this.userRepo.findByEmail(credentials.email);
     if (!user) throw new NotFoundError('User');
 
     // await User.validatePassword(credentials.password, user.password);
 
-    const token = this.generateAccessToken.execute(user.id, user.role);
-    const refreshToken = this.generateRefreshToken.execute(user.id, user.role);
+    const token = this.generateAccessToken.execute(user.getData().id, user.getData().role);
+    const refreshToken = this.generateRefreshToken.execute(user.getData().id, user.getData().role);
 
-    const existToken = await this.tokenRepository.findByUserId(user.id);
+    const existToken = await this.tokenRepo.findByUserId(user.getData().id);
 
     if (existToken) {
-      await this.tokenRepository.updateToken(user.id, refreshToken);
+      await this.tokenRepo.updateToken(user.getData().id, refreshToken);
     } else {
-      await this.tokenRepository.create({
+      await this.tokenRepo.create({
         token: refreshToken,
-        userId: user.id,
-        email: user.email
-      })
+        userId: user.getData().id,
+        email: user.getData().email,
+      });
     }
 
     return {
       token,
-      refreshToken
+      refreshToken,
     };
   }
 }

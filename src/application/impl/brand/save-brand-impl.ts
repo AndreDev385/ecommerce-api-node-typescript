@@ -21,7 +21,6 @@ export class SaveBrandUseCaseImpl implements SaveBrandUseCase {
   }
 
   async execute (input: InputBrandDto): Promise<OutputBrandDto> {
-    console.log(input, 'Input');
     let result: Brand;
     if (input.id) {
       const brand = new Brand(input)

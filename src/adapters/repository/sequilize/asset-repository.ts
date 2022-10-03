@@ -16,7 +16,7 @@ export class SequelizeAssetRepository implements AssetRepository {
 
   async create(asset: Asset) {
     const result = await this.database.create(asset.getData());
-    return asset;
+    return new Asset(result);
   }
   async findAll() {
     const result = await this.database.findAll({});
@@ -25,11 +25,5 @@ export class SequelizeAssetRepository implements AssetRepository {
   async findOne(id: string) {
     const result = await this.database.findOne({ where: { id } });
     return new Asset(result);
-  }
-  async update(asset: Asset) {
-    const result = await this.database.update(asset.getData(), {
-      where: { id: asset.getData().id },
-    });
-    return asset;
   }
 }

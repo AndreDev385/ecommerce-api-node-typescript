@@ -14,7 +14,6 @@ export class Brand {
   private readonly products: Product[] = [];
 
   constructor({ id, name, description, asset, products }: InputBrandDto) {
-    console.log(name, description, asset, products, 'Data');
     this.id = id;
     this.setName(name);
     this.setSlug(name);

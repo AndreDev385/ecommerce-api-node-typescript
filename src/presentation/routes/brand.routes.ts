@@ -3,8 +3,9 @@ import { FindOneBrandUseCase } from '../../application/usecases/brand/findone-br
 import { ListBrandUseCase } from '../../application/usecases/brand/list-brand';
 import { SaveBrandUseCase } from '../../application/usecases/brand/save-brand';
 import { DeleteBrandUseCase } from '../../application/usecases/brand/delete-brand';
+import { checkJWT, isRole } from '../middlewares/auth.handler';
 
-export default function brandRouter (
+export default function brandRouter(
   saveBrand: SaveBrandUseCase,
   listBrand: ListBrandUseCase,
   findOneBrand: FindOneBrandUseCase,
@@ -21,16 +22,19 @@ export default function brandRouter (
     }
   });
 
-  router.post('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { body } = req;
-      console.log(body, 'Body');
-      const brand = await saveBrand.execute(req.body);
-      res.json(brand);
-    } catch (error) {
-      next(error);
+  router.post(
+    '/',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const brand = await saveBrand.execute(req.body);
+        res.json(brand);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
   router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
