@@ -25,8 +25,8 @@ export default function assetRouter(
   // cloudinary
   router.post(
     '/cloudinary',
-    /*checkJWT,
-    isRole(['admin', 'seller']),*/
+    checkJWT,
+    isRole(['admin', 'seller']),
     uploadHandler.single('image'),
     async (req: Request, res: Response, next: NextFunction) => {
       try {

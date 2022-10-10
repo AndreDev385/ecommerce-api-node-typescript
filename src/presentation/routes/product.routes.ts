@@ -4,8 +4,9 @@ import { SaveProductUseCase } from '../../application/usecases/product/create-pr
 import { DeleteProductUseCase } from '../../application/usecases/product/delete-product-usecase';
 import { FindOneProductUseCase } from '../../application/usecases/product/findone-product-usecase';
 import { ListProductUseCase } from '../../application/usecases/product/list-product-usecase';
+import { checkJWT, isRole } from '../middlewares/auth.handler';
 
-export default function productRouter (
+export default function productRouter(
   listProduct: ListProductUseCase,
   createProduct: SaveProductUseCase,
   findOneProduct: FindOneProductUseCase,
@@ -22,15 +23,20 @@ export default function productRouter (
     }
   });
 
-  router.post('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { body } = req;
-      const product = await createProduct.execute(body);
-      res.json(product);
-    } catch (err) {
-      next(err);
+  router.post(
+    '/',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { body } = req;
+        const product = await createProduct.execute(body);
+        res.json(product);
+      } catch (err) {
+        next(err);
+      }
     }
-  });
+  );
 
   router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -40,22 +46,32 @@ export default function productRouter (
       next(err);
     }
   });
-  router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const product = await createProduct.execute({ ...req.body, id });
-      res.json(product);
-    } catch (err) {
-      next(err);
+  router.put(
+    '/:id',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        const product = await createProduct.execute({ ...req.body, id });
+        res.json(product);
+      } catch (err) {
+        next(err);
+      }
     }
-  });
-  router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const product = await deleteProduct.execute(req.params.id);
-      res.json(product);
-    } catch (err) {
-      next(err);
+  );
+  router.delete(
+    '/:id',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const product = await deleteProduct.execute(req.params.id);
+        res.json(product);
+      } catch (err) {
+        next(err);
+      }
     }
-  });
+  );
   return router;
 }

@@ -4,6 +4,7 @@ import { CreateOrderUseCase } from '../../application/usecases/order/create-orde
 import { FindOneOrderUseCase } from '../../application/usecases/order/findone-order-usecase';
 import { ListOrderUseCase } from '../../application/usecases/order/list-order-usecase';
 import { UpdateOrderUseCase } from '../../application/usecases/order/update-order-usecase';
+import { checkJWT, isRole } from '../middlewares/auth.handler';
 
 export default function orderRoutes(
   listOrder: ListOrderUseCase,
@@ -40,22 +41,32 @@ export default function orderRoutes(
     }
   });
 
-  router.patch('/:id/completed', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await changeOrderStatus.execute(req.params.id, 'completed');
-      res.json({ message: 'Status updated' });
-    } catch (error) {
-      next(error);
+  router.patch(
+    '/:id/completed',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await changeOrderStatus.execute(req.params.id, 'completed');
+        res.json({ message: 'Status updated' });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.patch('/:id/canceled', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await changeOrderStatus.execute(req.params.id, 'canceled');
-      res.json({ message: 'Status updated' });
-    } catch (error) {
-      next(error);
+  router.patch(
+    '/:id/canceled',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await changeOrderStatus.execute(req.params.id, 'canceled');
+        res.json({ message: 'Status updated' });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
   return router;
 }

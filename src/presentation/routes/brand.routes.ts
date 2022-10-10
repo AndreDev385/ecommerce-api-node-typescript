@@ -46,25 +46,35 @@ export default function brandRouter(
     }
   });
 
-  router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const brand = await saveBrand.execute({ ...req.body, id });
-      res.json(brand);
-    } catch (error) {
-      next(error);
+  router.put(
+    '/:id',
+    checkJWT,
+    isRole(['seller', 'admin']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        const brand = await saveBrand.execute({ ...req.body, id });
+        res.json(brand);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      await deleteBrand.execute(id);
-      res.json({ message: 'Brand deleted' });
-    } catch (error) {
-      next(error);
+  router.delete(
+    '/:id',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        await deleteBrand.execute(id);
+        res.json({ message: 'Brand deleted' });
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
   return router;
 }

@@ -4,6 +4,7 @@ import { DeleteUserUseCase } from '../../application/usecases/user/delete-user-u
 import { FindOneUserUseCase } from '../../application/usecases/user/findone-user-usecase';
 import { ListUserUseCase } from '../../application/usecases/user/list-user-usecase';
 import { UpdateUserRoleUseCase } from '../../application/usecases/user/update-user-role-usecase';
+import { checkJWT, isRole } from '../middlewares/auth.handler';
 
 export default function userRouter(
   listUsers: ListUserUseCase,
@@ -43,26 +44,36 @@ export default function userRouter(
     }
   });
 
-  router.patch('/:id/role', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { body } = req;
-      const { id } = req.params;
-      const user = await updateUserRole.execute(id, body.role);
-      res.status(200).json(user);
-    } catch (err: any) {
-      next(err);
+  router.patch(
+    '/:id/role',
+    checkJWT,
+    isRole(['admin', 'seller']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { body } = req;
+        const { id } = req.params;
+        const user = await updateUserRole.execute(id, body.role);
+        res.status(200).json(user);
+      } catch (err: any) {
+        next(err);
+      }
     }
-  });
+  );
 
-  router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      await deleteOne.execute(id);
-      res.status(200).json({ message: 'User deleted' });
-    } catch (err: any) {
-      next(err);
+  router.delete(
+    '/:id',
+    checkJWT,
+    isRole(['admin']),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { id } = req.params;
+        await deleteOne.execute(id);
+        res.status(200).json({ message: 'User deleted' });
+      } catch (err: any) {
+        next(err);
+      }
     }
-  });
+  );
 
   return router;
 }
